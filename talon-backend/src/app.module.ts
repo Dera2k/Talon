@@ -4,9 +4,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { configuration } from './config/configuration';
 import { validationSchema } from './config/validation.config';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -20,20 +20,7 @@ import { validationSchema } from './config/validation.config';
       ],
     }),
 
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        host: config.getOrThrow<string>('database.host'),
-        port: config.getOrThrow<number>('database.port'),
-        username: config.getOrThrow<string>('database.username'),
-        password: config.getOrThrow<string>('database.password'),
-        database: config.getOrThrow<string>('database.name'),
-        autoLoadEntities: true,
-        synchronize: config.getOrThrow<boolean>('database.synchronize'),
-        logging: config.getOrThrow<boolean>('database.logging'),
-      }),
-    }),
+    DatabaseModule,
 
     BullModule.forRootAsync({
       inject: [ConfigService],

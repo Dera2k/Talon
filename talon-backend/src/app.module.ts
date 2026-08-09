@@ -3,10 +3,10 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { configuration } from './config/configuration';
 import { validationSchema } from './config/validation.config';
 import { DatabaseModule } from './database/database.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -21,6 +21,7 @@ import { DatabaseModule } from './database/database.module';
     }),
 
     DatabaseModule,
+    LoggerModule,
 
     BullModule.forRootAsync({
       inject: [ConfigService],

@@ -3,10 +3,12 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import { ThrottlerModule } from '@nestjs/throttler';
+
 import { configuration } from './config/configuration';
 import { validationSchema } from './config/validation.config';
 import { DatabaseModule } from './database/database.module';
 import { LoggerModule } from './logger/logger.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -50,6 +52,8 @@ import { LoggerModule } from './logger/logger.module';
         return [{ ttl: throttle.ttl, limit: throttle.limit }];
       },
     }),
+
+    HealthModule,
   ],
 })
 export class AppModule {}

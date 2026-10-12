@@ -1,4 +1,11 @@
-import { MigrationInterface, QueryRunner, Table, TableIndex, TableForeignKey, TableUnique } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableIndex,
+  TableForeignKey,
+  TableUnique,
+} from 'typeorm';
 
 export class CreateHabitCompletions1700000000003 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {

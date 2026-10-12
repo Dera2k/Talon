@@ -4,7 +4,9 @@ import * as bcrypt from 'bcrypt';
 export async function seedUsers(dataSource: DataSource): Promise<void> {
   const userRepository = dataSource.getRepository('users');
 
-  const existing = await userRepository.findOne({ where: { email: 'demo@talon.app' } });
+  const existing = await userRepository.findOne({
+    where: { email: 'demo@talon.app' },
+  });
   if (existing) {
     console.info('Demo user already exists, skipping user seed.');
     return;

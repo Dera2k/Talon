@@ -61,10 +61,22 @@ export class AddIndexes1700000000007 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropIndex('habits', 'IDX_HABITS_USER_FREQUENCY_ARCHIVED');
-    await queryRunner.dropIndex('habit_completions', 'IDX_HABIT_COMPLETIONS_HABIT_DATE_DESC');
-    await queryRunner.dropIndex('habit_completions', 'IDX_HABIT_COMPLETIONS_USER_DATE_STATUS');
+    await queryRunner.dropIndex(
+      'habit_completions',
+      'IDX_HABIT_COMPLETIONS_HABIT_DATE_DESC',
+    );
+    await queryRunner.dropIndex(
+      'habit_completions',
+      'IDX_HABIT_COMPLETIONS_USER_DATE_STATUS',
+    );
     await queryRunner.dropIndex('streaks', 'IDX_STREAKS_USER_CURRENT_DESC');
-    await queryRunner.dropIndex('notifications', 'IDX_NOTIFICATIONS_USER_UNREAD_CREATED');
-    await queryRunner.dropIndex('password_reset_tokens', 'IDX_PASSWORD_RESET_TOKENS_UNUSED_EXPIRES');
+    await queryRunner.dropIndex(
+      'notifications',
+      'IDX_NOTIFICATIONS_USER_UNREAD_CREATED',
+    );
+    await queryRunner.dropIndex(
+      'password_reset_tokens',
+      'IDX_PASSWORD_RESET_TOKENS_UNUSED_EXPIRES',
+    );
   }
 }

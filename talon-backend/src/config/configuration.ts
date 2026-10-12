@@ -6,4 +6,12 @@ import { jwtConfig } from './jwt.config';
 import { redisConfig } from './redis.config';
 import { throttleConfig } from './throttle.config';
 
-export const configuration = [ appConfig, databaseConfig, jwtConfig, redisConfig, bullConfig, cacheConfig, throttleConfig ];
+export const configuration = [
+  appConfig,
+  databaseConfig,
+  jwtConfig,
+  redisConfig,
+  bullConfig,
+  cacheConfig,
+  throttleConfig,
+];

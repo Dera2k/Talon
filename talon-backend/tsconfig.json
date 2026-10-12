@@ -10,7 +10,10 @@
       "@common/*": ["src/common/*"],
       "@database/*": ["src/database/*"],
       "@modules/*": ["src/*"],
-      "@logger/*": ["src/logger/*"]
+      "@logger/*": ["src/logger/*"],
+      "@users/*": ["src/users/*"],
+      "@auth/*": ["src/auth/*"],
+      "@mail/*": ["src/mail/*"]
     },
 
     "outDir": "./dist",

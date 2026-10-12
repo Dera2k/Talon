@@ -1,4 +1,10 @@
-import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableIndex,
+  TableForeignKey,
+} from 'typeorm';
 
 export class CreatePasswordResetTokens1700000000006 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -21,7 +27,7 @@ export class CreatePasswordResetTokens1700000000006 implements MigrationInterfac
           {
             name: 'token_hash',
             type: 'varchar',
-            length: '255',
+            length: '64',
             isNullable: false,
           },
           {
@@ -43,6 +49,17 @@ export class CreatePasswordResetTokens1700000000006 implements MigrationInterfac
         ],
       }),
       true,
+    );
+
+    await queryRunner.createForeignKey(
+      'password_reset_tokens',
+      new TableForeignKey({
+        name: 'FK_PASSWORD_RESET_TOKENS_USER_ID',
+        columnNames: ['user_id'],
+        referencedTableName: 'users',
+        referencedColumnNames: ['id'],
+        onDelete: 'CASCADE',
+      }),
     );
 
     await queryRunner.createIndex(
@@ -67,6 +84,14 @@ export class CreatePasswordResetTokens1700000000006 implements MigrationInterfac
       new TableIndex({
         name: 'IDX_PASSWORD_RESET_TOKENS_EXPIRES_AT',
         columnNames: ['expires_at'],
+      }),
+    );
+
+    await queryRunner.createIndex(
+      'password_reset_tokens',
+      new TableIndex({
+        name: 'IDX_PASSWORD_RESET_TOKENS_USED_AT',
+        columnNames: ['used_at'],
       }),
     );
   }

@@ -3,6 +3,7 @@ import { bullConfig } from './bull.config';
 import { cacheConfig } from './cache.config';
 import { databaseConfig } from './database.config';
 import { jwtConfig } from './jwt.config';
+import { mailConfig } from './mail.config';
 import { redisConfig } from './redis.config';
 import { throttleConfig } from './throttle.config';
 
@@ -14,4 +15,5 @@ export const configuration = [
   bullConfig,
   cacheConfig,
   throttleConfig,
+  mailConfig,
 ];

@@ -1,43 +1,32 @@
-import {
-  IsEmail,
-  IsString,
-  MinLength,
-  MaxLength,
-  IsOptional,
-} from 'class-validator';
-import { Trim } from '../../common/transformers/trim.transformer';
+import { IsEmail, IsOptional, IsString, MaxLength } from 'class-validator';
 import { Lowercase } from '../../common/transformers/lowercase.transformer';
+import { Trim } from '../../common/transformers/trim.transformer';
+import { IsPasswordStrong } from '../../common/validators/password-strength.validator';
 import { IsTimezone } from '../../common/validators/is-timezone.validator';
-import { Theme } from '../../common/enums/theme.enum';
 
 export class RegisterDto {
-  @IsEmail()
   @Trim()
   @Lowercase()
+  @IsEmail()
+  @MaxLength(254)
   email!: string;
 
-  @IsString()
-  @MinLength(8)
-  @MaxLength(128)
+  @IsPasswordStrong()
   password!: string;
 
   @IsOptional()
-  @IsString()
   @Trim()
-  @MaxLength(100)
+  @IsString()
+  @MaxLength(50)
   firstName?: string;
 
   @IsOptional()
-  @IsString()
   @Trim()
-  @MaxLength(100)
+  @IsString()
+  @MaxLength(50)
   lastName?: string;
 
   @IsOptional()
   @IsTimezone()
   timezone?: string;
-
-  @IsOptional()
-  @IsString()
-  theme?: Theme;
 }

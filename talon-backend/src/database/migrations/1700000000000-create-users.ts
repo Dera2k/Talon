@@ -16,26 +16,25 @@ export class CreateUsers1700000000000 implements MigrationInterface {
           {
             name: 'email',
             type: 'varchar',
-            length: '255',
+            length: '254',
             isUnique: true,
             isNullable: false,
           },
           {
             name: 'password_hash',
             type: 'varchar',
-            length: '255',
             isNullable: false,
           },
           {
             name: 'first_name',
             type: 'varchar',
-            length: '100',
+            length: '50',
             isNullable: true,
           },
           {
             name: 'last_name',
             type: 'varchar',
-            length: '100',
+            length: '50',
             isNullable: true,
           },
           {
@@ -51,6 +50,13 @@ export class CreateUsers1700000000000 implements MigrationInterface {
             length: '20',
             isNullable: false,
             default: "'system'",
+          },
+          {
+            name: 'role',
+            type: 'varchar',
+            length: '20',
+            isNullable: false,
+            default: "'user'",
           },
           {
             name: 'is_active',

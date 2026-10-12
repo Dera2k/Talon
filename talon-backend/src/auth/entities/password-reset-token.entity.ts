@@ -3,24 +3,25 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { User } from '@users/entities/user.entity';
 
 @Entity('password_reset_tokens')
-@Index(['userId'])
-@Index(['tokenHash'], { unique: true })
-@Index(['expiresAt'])
-@Index(['usedAt'])
 export class PasswordResetToken {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
+  @Index()
   @Column({ name: 'user_id', type: 'uuid' })
   userId!: string;
 
   @Column({ name: 'token_hash', type: 'varchar', length: 64, unique: true })
   tokenHash!: string;
 
+  @Index()
   @Column({ name: 'expires_at', type: 'timestamptz' })
   expiresAt!: Date;
 
@@ -29,4 +30,8 @@ export class PasswordResetToken {
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
+
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
+  user!: User;
 }

@@ -1,7 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
 import { HealthService } from './health.service';
 import { SkipResponseWrapper } from '@common/decorators/skip-response-wrapper.decorator';
+import { Public } from '@common/decorators/public.decorator';
 
+@Public()
 @SkipResponseWrapper()
 @Controller('health')
 export class HealthController {

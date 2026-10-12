@@ -1,46 +1,52 @@
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { Theme } from '@common/enums/theme.enum';
+import { QueryFailedError, Repository } from 'typeorm';
+import { ErrorCode } from '@common/enums/error-code.enum';
+import { AppException } from '@common/exceptions/app.exception';
 import { User } from './entities/user.entity';
+
+const PG_UNIQUE_VIOLATION = '23505';
+
+export type CreateUserData = Pick<User, 'email' | 'passwordHash'> &
+  Partial<Pick<User, 'firstName' | 'lastName' | 'timezone'>>;
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(User) private readonly users: Repository<User>,
   ) {}
 
-  async findByEmail(email: string): Promise<User | null> {
-    return this.userRepository.findOne({
-      where: { email: email.toLowerCase() },
-    });
+  findById(id: string): Promise<User | null> {
+    return this.users.findOneBy({ id });
   }
 
-  async findById(id: string): Promise<User | null> {
-    return this.userRepository.findOne({
-      where: { id },
-    });
+  findByEmail(email: string): Promise<User | null> {
+    return this.users.findOneBy({ email });
   }
 
-  async create(data: {
-    email: string;
-    passwordHash: string;
-    firstName?: string;
-    lastName?: string;
-    timezone?: string;
-    theme?: Theme;
-  }): Promise<User> {
-    const user = this.userRepository.create({
-      email: data.email.toLowerCase(),
-      passwordHash: data.passwordHash,
-      firstName: data.firstName ?? null,
-      lastName: data.lastName ?? null,
-      timezone: data.timezone ?? 'UTC',
-      theme: data.theme ?? Theme.SYSTEM,
-      isActive: true,
-      isVerified: false,
-    });
-    return this.userRepository.save(user);
+  findByEmailWithPassword(email: string): Promise<User | null> {
+    return this.users
+      .createQueryBuilder('user')
+      .addSelect('user.passwordHash')
+      .where('user.email = :email', { email })
+      .getOne();
+  }
+
+  async create(data: CreateUserData): Promise<User> {
+    try {
+      return await this.users.save(this.users.create(data));
+    } catch (error) {
+      if (
+        error instanceof QueryFailedError &&
+        (error.driverError as { code?: string }).code === PG_UNIQUE_VIOLATION
+      ) {
+        throw new AppException(
+          HttpStatus.CONFLICT,
+          ErrorCode.CONFLICT,
+          'Email is already registered',
+        );
+      }
+      throw error;
+    }
   }
 }

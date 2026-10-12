@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Role } from '@common/enums/role.enum';
 import { Theme } from '@common/enums/theme.enum';
 
 @Entity('users')
@@ -16,16 +17,16 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'varchar', length: 254, unique: true })
   email!: string;
 
-  @Column({ name: 'password_hash', type: 'varchar', length: 255 })
+  @Column({ name: 'password_hash', type: 'varchar', select: false })
   passwordHash!: string;
 
-  @Column({ name: 'first_name', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'first_name', type: 'varchar', length: 50, nullable: true })
   firstName!: string | null;
 
-  @Column({ name: 'last_name', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'last_name', type: 'varchar', length: 50, nullable: true })
   lastName!: string | null;
 
   @Column({ type: 'varchar', length: 50, default: 'UTC' })
@@ -37,6 +38,13 @@ export class User {
     default: Theme.SYSTEM,
   })
   theme!: Theme;
+
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.USER,
+  })
+  role!: Role;
 
   @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive!: boolean;

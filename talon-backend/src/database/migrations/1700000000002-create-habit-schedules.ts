@@ -1,4 +1,10 @@
-import { MigrationInterface, QueryRunner, Table, TableIndex, TableForeignKey } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableIndex,
+  TableForeignKey,
+} from 'typeorm';
 
 export class CreateHabitSchedules1700000000002 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -27,7 +33,7 @@ export class CreateHabitSchedules1700000000002 implements MigrationInterface {
           {
             name: 'days_of_week',
             type: 'int',
-            array: true,
+            isArray: true,
             isNullable: true,
           },
           {

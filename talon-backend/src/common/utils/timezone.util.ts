@@ -17,3 +17,12 @@ export function getLocalDateKey(
 
   return `${value.year}-${value.month}-${value.day}`;
 }
+
+export function isValidTimezone(timezone: string): boolean {
+  try {
+    new Intl.DateTimeFormat('en-CA', { timeZone: timezone });
+    return true;
+  } catch {
+    return false;
+  }
+}

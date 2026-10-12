@@ -1,4 +1,8 @@
-import { Injectable, OnModuleDestroy, ServiceUnavailableException } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleDestroy,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 import { DataSource } from 'typeorm';
@@ -25,7 +29,7 @@ export class HealthService implements OnModuleDestroy {
     this.redis.on('error', () => undefined);
   }
 
-  async app() {
+  app() {
     return {
       status: 'ok',
       uptimeSeconds: Math.floor(process.uptime()),

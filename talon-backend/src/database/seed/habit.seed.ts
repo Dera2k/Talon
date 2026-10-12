@@ -1,23 +1,31 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { DataSource } from 'typeorm';
 
 export async function seedHabits(dataSource: DataSource): Promise<void> {
   const userRepository = dataSource.getRepository('users');
+
   const habitRepository = dataSource.getRepository('habits');
+
   const scheduleRepository = dataSource.getRepository('habit_schedules');
 
-  const user = await userRepository.findOne({ where: { email: 'demo@talon.app' } });
+  const user = await userRepository.findOne({
+    where: { email: 'demo@talon.app' },
+  });
   if (!user) {
     console.warn('Demo user not found, skipping habit seed.');
     return;
   }
 
-  const existingHabits = await habitRepository.count({ where: { user_id: user.id } });
+  const existingHabits = await habitRepository.count({
+    where: { user_id: user.id },
+  });
   if (existingHabits > 0) {
     console.info('Habits already exist for demo user, skipping habit seed.');
     return;
   }
 
   // Habit 1: Daily exercise
+
   const exerciseHabit = await habitRepository.save({
     user_id: user.id,
     name: 'Exercise',
@@ -38,6 +46,7 @@ export async function seedHabits(dataSource: DataSource): Promise<void> {
   });
 
   // Habit 2: Read daily
+
   const readHabit = await habitRepository.save({
     user_id: user.id,
     name: 'Read',
@@ -58,6 +67,7 @@ export async function seedHabits(dataSource: DataSource): Promise<void> {
   });
 
   // Habit 3: Weekly planning (weekly)
+
   const planningHabit = await habitRepository.save({
     user_id: user.id,
     name: 'Weekly Planning',
@@ -79,6 +89,7 @@ export async function seedHabits(dataSource: DataSource): Promise<void> {
   });
 
   // Habit 4: Monthly review (monthly)
+
   const reviewHabit = await habitRepository.save({
     user_id: user.id,
     name: 'Monthly Review',

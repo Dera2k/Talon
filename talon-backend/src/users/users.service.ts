@@ -10,6 +10,10 @@ const PG_UNIQUE_VIOLATION = '23505';
 export type CreateUserData = Pick<User, 'email' | 'passwordHash'> &
   Partial<Pick<User, 'firstName' | 'lastName' | 'timezone'>>;
 
+export type UpdatableUserFields = Partial<
+  Pick<User, 'firstName' | 'lastName' | 'timezone' | 'theme'>
+>;
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -48,5 +52,38 @@ export class UsersService {
       }
       throw error;
     }
+  }
+
+  async getById(id: string): Promise<User> {
+    const user = await this.findById(id);
+    if (!user) {
+      throw new AppException(
+        HttpStatus.NOT_FOUND,
+        ErrorCode.NOT_FOUND,
+        'User not found',
+      );
+    }
+    return user;
+  }
+
+  async update(id: string, data: UpdatableUserFields): Promise<User> {
+    const user = await this.getById(id);
+    return this.users.save(Object.assign(user, data));
+  }
+
+  findByIdWithPassword(id: string): Promise<User | null> {
+    return this.users
+      .createQueryBuilder('user')
+      .addSelect('user.passwordHash')
+      .where('user.id = :id', { id })
+      .getOne();
+  }
+
+  async updatePasswordHash(id: string, passwordHash: string): Promise<void> {
+    await this.users.update(id, { passwordHash });
+  }
+
+  async softDelete(id: string): Promise<void> {
+    await this.users.softDelete(id);
   }
 }

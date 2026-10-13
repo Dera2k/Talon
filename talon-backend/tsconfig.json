@@ -13,7 +13,8 @@
       "@logger/*": ["src/logger/*"],
       "@users/*": ["src/users/*"],
       "@auth/*": ["src/auth/*"],
-      "@mail/*": ["src/mail/*"]
+      "@mail/*": ["src/mail/*"],
+      "@settings/*": ["src/settings/*"]
     },
 
     "outDir": "./dist",

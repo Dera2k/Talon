@@ -14,6 +14,7 @@ import { HealthModule } from './health/health.module';
 import { UsersModule } from '@users/users.module';
 import { AuthModule } from '@auth/auth.module';
 import { MailModule } from '@mail/mail.module';
+import { SettingsModule } from '@settings/settings.module';
 import { AllExceptionsFilter } from '@common/filters/all-exceptions.filter';
 import { ResponseInterceptor } from '@common/interceptors/response.interceptor';
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
@@ -62,6 +63,7 @@ import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
     UsersModule,
     AuthModule,
     MailModule,
+    SettingsModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },

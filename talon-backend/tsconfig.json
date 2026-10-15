@@ -14,7 +14,8 @@
       "@users/*": ["src/users/*"],
       "@auth/*": ["src/auth/*"],
       "@mail/*": ["src/mail/*"],
-      "@settings/*": ["src/settings/*"]
+      "@settings/*": ["src/settings/*"],
+      "@habits/*": ["src/habits/*"]
     },
 
     "outDir": "./dist",

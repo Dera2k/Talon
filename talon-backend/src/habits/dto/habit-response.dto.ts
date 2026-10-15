@@ -11,6 +11,7 @@ export class HabitResponseDto {
   reminderTime!: string | null;
   archivedAt!: Date | null;
   createdAt!: Date;
+  weekdays!: number[];
 
   static from(habit: Habit): HabitResponseDto {
     return {
@@ -22,6 +23,7 @@ export class HabitResponseDto {
       reminderTime: habit.reminderTime,
       archivedAt: habit.archivedAt,
       createdAt: habit.createdAt,
+      weekdays: habit.schedule.daysOfWeek,
     };
   }
 }

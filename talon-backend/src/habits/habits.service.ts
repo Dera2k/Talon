@@ -7,15 +7,26 @@ import { CreateHabitDto } from './dto/create-habit.dto';
 import { HabitQueryDto } from './dto/habit-query.dto';
 import { UpdateHabitDto } from './dto/update-habit.dto';
 import { Habit } from './entities/habit.entity';
+import { SchedulesService } from '@schedules/schedules.service';
 
 @Injectable()
 export class HabitsService {
   constructor(
     @InjectRepository(Habit) private readonly habits: Repository<Habit>,
+    private readonly schedules: SchedulesService,
   ) {}
 
   create(userId: string, dto: CreateHabitDto): Promise<Habit> {
-    return this.habits.save(this.habits.create({ ...dto, userId }));
+    const { weekdays, ...fields } = dto;
+    const days = this.schedules.resolveDays(dto.frequency, weekdays);
+
+    return this.habits.manager.transaction(async (manager) => {
+      const habit = await manager.save(
+        manager.create(Habit, { ...fields, userId }),
+      );
+      habit.schedule = await this.schedules.create(habit.id, days, manager);
+      return habit;
+    });
   }
 
   async list(userId: string, query: HabitQueryDto) {
@@ -25,6 +36,7 @@ export class HabitsService {
       order: { createdAt: 'DESC' },
       skip: (page - 1) * limit,
       take: limit,
+      relations: { schedule: true },
     });
 
     return {
@@ -34,7 +46,10 @@ export class HabitsService {
   }
 
   async getOwned(userId: string, id: string): Promise<Habit> {
-    const habit = await this.habits.findOneBy({ id, userId });
+    const habit = await this.habits.findOne({
+      where: { id, userId },
+      relations: { schedule: true },
+    });
     if (!habit) {
       throw new AppException(
         HttpStatus.NOT_FOUND,
@@ -51,7 +66,20 @@ export class HabitsService {
     dto: UpdateHabitDto,
   ): Promise<Habit> {
     const habit = await this.getOwned(userId, id);
-    return this.habits.save(Object.assign(habit, dto));
+    const { weekdays, ...fields } = dto;
+
+    const scheduleChanged =
+      dto.frequency !== undefined || weekdays !== undefined;
+    const days = scheduleChanged
+      ? this.schedules.resolveDays(dto.frequency ?? habit.frequency, weekdays)
+      : null;
+
+    return this.habits.manager.transaction(async (manager) => {
+      const saved = await manager.save(Object.assign(habit, fields));
+      if (days)
+        saved.schedule = await this.schedules.replace(habit.id, days, manager);
+      return saved;
+    });
   }
 
   async archive(userId: string, id: string): Promise<void> {

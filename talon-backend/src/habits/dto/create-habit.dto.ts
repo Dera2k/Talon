@@ -1,10 +1,16 @@
 import {
+  ArrayMaxSize,
+  ArrayUnique,
+  IsArray,
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
   Matches,
+  Max,
   MaxLength,
+  Min,
 } from 'class-validator';
 import { HabitColor } from '@common/enums/habit-color.enum';
 import { HabitFrequency } from '@common/enums/habit-frequency.enum';
@@ -34,4 +40,13 @@ export class CreateHabitDto {
     message: 'reminderTime must be in HH:mm (24h) format',
   })
   reminderTime?: string | null;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(7)
+  @ArrayUnique()
+  @IsInt({ each: true })
+  @Min(0, { each: true })
+  @Max(6, { each: true })
+  weekdays?: number[];
 }

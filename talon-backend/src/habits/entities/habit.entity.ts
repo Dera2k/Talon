@@ -5,12 +5,14 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { HabitColor } from '@common/enums/habit-color.enum';
 import { HabitFrequency } from '@common/enums/habit-frequency.enum';
 import { User } from '@users/entities/user.entity';
+import { HabitSchedule } from '@schedules/entities/habit-schedule.entity';
 
 @Entity('habits')
 @Index(['userId', 'archivedAt'])
@@ -48,4 +50,7 @@ export class Habit {
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user!: User;
+
+  @OneToOne(() => HabitSchedule, (schedule) => schedule.habit)
+  schedule!: HabitSchedule;
 }

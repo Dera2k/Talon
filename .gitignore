@@ -11,6 +11,9 @@ dist/
 .next/
 coverage/
 
+# Compiled TypeScript artifacts in source
+talon-backend/src/**/*.js
+
 # Logs
 *.log
 

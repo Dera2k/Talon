@@ -5,6 +5,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { ValidationPipe } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
+import { createKeyv } from '@keyv/redis';
 
 import { configuration } from './config/configuration';
 import { validationSchema } from './config/validation.config';
@@ -13,16 +15,13 @@ import { LoggerModule } from './logger/logger.module';
 import { HealthModule } from './health/health.module';
 import { UsersModule } from '@users/users.module';
 import { AuthModule } from '@auth/auth.module';
-import { MailModule } from '@mail/mail.module';
 import { HabitsModule } from '@habits/habits.module';
 import { SettingsModule } from '@settings/settings.module';
-import { SchedulesModule } from '@schedules/schedules.module';
 import { CompletionsModule } from '@completions/completions.module';
 import { StreaksModule } from '@streaks/streaks.module';
 import { NotificationsModule } from '@notifications/notifications.module';
 import { DashboardModule } from '@dashboard/dashboard.module';
 import { AnalyticsModule } from '@analytics/analytics.module';
-import { ScheduleModule } from '@nestjs/schedule';
 import { QueueModule } from '@queues/queue.module';
 import { SchedulerModule } from '@scheduler/scheduler.module';
 import { AllExceptionsFilter } from '@common/filters/all-exceptions.filter';
@@ -53,36 +52,44 @@ import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
       }),
     }),
 
-    CacheModule.register({
+    CacheModule.registerAsync({
       isGlobal: true,
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        const host = config.getOrThrow<string>('redis.host');
+        const port = config.getOrThrow<number>('redis.port');
+        const password = config.get<string>('redis.password');
+        const auth = password ? `:${encodeURIComponent(password)}@` : '';
+
+        return { stores: [createKeyv(`redis://${auth}${host}:${port}`)] };
+      },
     }),
 
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
-        const throttle = config.getOrThrow<{
+        const { ttl, limit } = config.getOrThrow<{
           ttl: number;
           limit: number;
         }>('throttle');
 
-        return [{ ttl: throttle.ttl, limit: throttle.limit }];
+        return [{ ttl, limit }];
       },
     }),
+
+    ScheduleModule.forRoot(),
 
     HealthModule,
     UsersModule,
     AuthModule,
-    MailModule,
-    SettingsModule,
     HabitsModule,
-    SchedulesModule,
+    SettingsModule,
     CompletionsModule,
     StreaksModule,
     NotificationsModule,
     DashboardModule,
     AnalyticsModule,
     QueueModule,
-    ScheduleModule.forRoot(),
     SchedulerModule,
   ],
   providers: [

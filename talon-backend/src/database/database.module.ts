@@ -17,7 +17,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
         database: config.getOrThrow<string>('database.name'),
         autoLoadEntities: true,
         namingStrategy: new SnakeNamingStrategy(),
-        synchronize: config.getOrThrow<boolean>('database.synchronize'),
+        synchronize: false,
         logging: config.getOrThrow<boolean>('database.logging'),
       }),
     }),

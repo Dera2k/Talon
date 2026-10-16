@@ -7,7 +7,6 @@ export const validationSchema = Joi.object({
 
   PORT: Joi.number().port().default(3000),
   API_PREFIX: Joi.string().default('api'),
-  CORS_ORIGINS: Joi.string().required(),
 
   DATABASE_HOST: Joi.string().hostname().required(),
   DATABASE_PORT: Joi.number().port().default(5432),
@@ -20,15 +19,21 @@ export const validationSchema = Joi.object({
   REDIS_PASSWORD: Joi.string().allow('').optional(),
 
   JWT_ACCESS_SECRET: Joi.string().min(32).required(),
-  JWT_ACCESS_EXPIRES_IN: Joi.string().default('15m'),
-  JWT_REFRESH_EXPIRES_IN: Joi.string().default('30d'),
+  JWT_ACCESS_EXPIRES_IN: Joi.string()
+    .pattern(/^\d+[smhd]$/)
+    .default('20m'),
+  JWT_REFRESH_EXPIRES_IN: Joi.string()
+    .pattern(/^\d+[smhd]$/)
+    .default('7d'),
 
   RESEND_API_KEY: Joi.string().when('NODE_ENV', {
     is: 'production',
     then: Joi.required(),
+    otherwise: Joi.optional(),
   }),
   MAIL_FROM: Joi.string().default('Talon <onboarding@resend.dev>'),
   PASSWORD_RESET_URL: Joi.string()
     .uri()
     .default('http://localhost:3000/reset-password'),
+  CORS_ORIGINS: Joi.string().allow('').default(''),
 });

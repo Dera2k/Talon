@@ -19,7 +19,9 @@
       "@schedules/*": ["src/schedules/*"],
       "@completions/*": ["src/completions/*"],
       "@streaks/*": ["src/streaks/*"],
-      "@notifications/*": ["src/notifications/*"]
+      "@notifications/*": ["src/notifications/*"],
+      "@cache/*": ["src/cache/*"],
+      "@dashboard/*": ["src/dashboard/*"]
     },
 
     "outDir": "./dist",

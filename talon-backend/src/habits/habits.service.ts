@@ -8,24 +8,30 @@ import { HabitQueryDto } from './dto/habit-query.dto';
 import { UpdateHabitDto } from './dto/update-habit.dto';
 import { Habit } from './entities/habit.entity';
 import { SchedulesService } from '@schedules/schedules.service';
+import { CacheService } from '@cache/cache.service';
 
 @Injectable()
 export class HabitsService {
   constructor(
     @InjectRepository(Habit) private readonly habits: Repository<Habit>,
     private readonly schedules: SchedulesService,
+    private readonly cache: CacheService,
   ) {}
 
   create(userId: string, dto: CreateHabitDto): Promise<Habit> {
     const { weekdays, ...fields } = dto;
     const days = this.schedules.resolveDays(dto.frequency, weekdays);
 
-    return this.habits.manager.transaction(async (manager) => {
-      const habit = await manager.save(
+    const habit = this.habits.manager.transaction(async (manager) => {
+      const created = await manager.save(
         manager.create(Habit, { ...fields, userId }),
       );
-      habit.schedule = await this.schedules.create(habit.id, days, manager);
-      return habit;
+      created.schedule = await this.schedules.create(created.id, days, manager);
+      return created;
+    });
+    return habit.then(async (result) => {
+      await this.cache.invalidateDashboard(userId);
+      return result;
     });
   }
 
@@ -74,24 +80,28 @@ export class HabitsService {
       ? this.schedules.resolveDays(dto.frequency ?? habit.frequency, weekdays)
       : null;
 
-    return this.habits.manager.transaction(async (manager) => {
-      const saved = await manager.save(Object.assign(habit, fields));
+    const saved = await this.habits.manager.transaction(async (manager) => {
+      const result = await manager.save(Object.assign(habit, fields));
       if (days)
-        saved.schedule = await this.schedules.replace(habit.id, days, manager);
-      return saved;
+        result.schedule = await this.schedules.replace(habit.id, days, manager);
+      return result;
     });
+    await this.cache.invalidateDashboard(userId);
+    return saved;
   }
 
   async archive(userId: string, id: string): Promise<void> {
     const habit = await this.getOwned(userId, id);
     if (!habit.archivedAt) {
       await this.habits.update(habit.id, { archivedAt: new Date() });
+      await this.cache.invalidateDashboard(userId);
     }
   }
 
   findAllActive(userId: string): Promise<Habit[]> {
     return this.habits.find({
       where: { userId, archivedAt: IsNull() },
+      order: { createdAt: 'ASC' },
       relations: { schedule: true },
     });
   }

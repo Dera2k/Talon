@@ -20,6 +20,7 @@ import { SchedulesModule } from '@schedules/schedules.module';
 import { CompletionsModule } from '@completions/completions.module';
 import { StreaksModule } from '@streaks/streaks.module';
 import { NotificationsModule } from '@notifications/notifications.module';
+import { DashboardModule } from '@dashboard/dashboard.module';
 import { AllExceptionsFilter } from '@common/filters/all-exceptions.filter';
 import { ResponseInterceptor } from '@common/interceptors/response.interceptor';
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
@@ -74,6 +75,7 @@ import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
     CompletionsModule,
     StreaksModule,
     NotificationsModule,
+    DashboardModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },

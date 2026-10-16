@@ -56,10 +56,16 @@ export class StreaksService {
 
   async listForUser(userId: string): Promise<Streak[]> {
     const today = await this.users.getTodayKey(userId);
-    const [habits, existing] = await Promise.all([
-      this.habits.findAllActive(userId),
-      this.streaks.findBy({ userId }),
-    ]);
+    const habits = await this.habits.findAllActive(userId);
+    return this.refreshAll(userId, habits, today);
+  }
+
+  async refreshAll(
+    userId: string,
+    habits: HabitWithSchedule[],
+    today: string,
+  ): Promise<Streak[]> {
+    const existing = await this.streaks.findBy({ userId });
     const byHabit = new Map(existing.map((streak) => [streak.habitId, streak]));
 
     const result: Streak[] = [];

@@ -10,6 +10,7 @@ import { UsersService } from '@users/users.service';
 import { CompletionHistoryQueryDto } from './dto/completion-history-query.dto';
 import { LogCompletionDto } from './dto/log-completion.dto';
 import { HabitCompletion } from './entities/habit-completion.entity';
+import { CacheService } from '@cache/cache.service';
 
 const MAX_BACKDATE_DAYS = 7;
 
@@ -21,6 +22,7 @@ export class CompletionsService {
     private readonly habits: HabitsService,
     private readonly streaks: StreaksService,
     private readonly users: UsersService,
+    private readonly cache: CacheService,
   ) {}
 
   async log(
@@ -39,15 +41,19 @@ export class CompletionsService {
       throw this.businessError('Habit is not scheduled on this date');
     }
 
-    return this.completions.manager.transaction(async (manager) => {
-      await manager.upsert(
-        HabitCompletion,
-        { habitId, userId, date, status: dto.status },
-        ['habitId', 'date'],
-      );
-      await this.streaks.recalculate(manager, habit, today);
-      return manager.findOneByOrFail(HabitCompletion, { habitId, date });
-    });
+    const completion = await this.completions.manager.transaction(
+      async (manager) => {
+        await manager.upsert(
+          HabitCompletion,
+          { habitId, userId, date, status: dto.status },
+          ['habitId', 'date'],
+        );
+        await this.streaks.recalculate(manager, habit, today);
+        return manager.findOneByOrFail(HabitCompletion, { habitId, date });
+      },
+    );
+    await this.cache.invalidateDashboard(userId);
+    return completion;
   }
 
   async undo(userId: string, habitId: string, dateKey: string): Promise<void> {
@@ -59,6 +65,7 @@ export class CompletionsService {
       await manager.delete(HabitCompletion, { habitId, userId, date });
       await this.streaks.recalculate(manager, habit, today);
     });
+    await this.cache.invalidateDashboard(userId);
   }
 
   async history(userId: string, query: CompletionHistoryQueryDto) {
@@ -85,6 +92,10 @@ export class CompletionsService {
       items,
       meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
     };
+  }
+
+  findByDate(userId: string, date: string): Promise<HabitCompletion[]> {
+    return this.completions.findBy({ userId, date });
   }
 
   private resolveDate(today: string, requested?: string): string {

@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HabitsModule } from '@habits/habits.module';
 import { StreaksModule } from '@streaks/streaks.module';
 import { UsersModule } from '@users/users.module';
+import { AppCacheModule } from '@cache/cache.module';
 import { CompletionsController } from './completions.controller';
 import { CompletionsService } from './completions.service';
 import { HabitCompletion } from './entities/habit-completion.entity';
@@ -13,6 +14,7 @@ import { HabitCompletion } from './entities/habit-completion.entity';
     HabitsModule,
     StreaksModule,
     UsersModule,
+    AppCacheModule,
   ],
   controllers: [CompletionsController],
   providers: [CompletionsService],

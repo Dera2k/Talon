@@ -88,4 +88,11 @@ export class HabitsService {
       await this.habits.update(habit.id, { archivedAt: new Date() });
     }
   }
+
+  findAllActive(userId: string): Promise<Habit[]> {
+    return this.habits.find({
+      where: { userId, archivedAt: IsNull() },
+      relations: { schedule: true },
+    });
+  }
 }

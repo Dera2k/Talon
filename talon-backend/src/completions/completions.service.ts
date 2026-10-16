@@ -4,8 +4,8 @@ import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { ErrorCode } from '@common/enums/error-code.enum';
 import { AppException } from '@common/exceptions/app.exception';
 import { isDueOn, isValidDateKey, shiftDateKey } from '@common/utils/date.util';
-import { getLocalDateKey } from '@common/utils/timezone.util';
 import { HabitsService } from '@habits/habits.service';
+import { StreaksService } from '@streaks/streaks.service';
 import { UsersService } from '@users/users.service';
 import { CompletionHistoryQueryDto } from './dto/completion-history-query.dto';
 import { LogCompletionDto } from './dto/log-completion.dto';
@@ -19,6 +19,7 @@ export class CompletionsService {
     @InjectRepository(HabitCompletion)
     private readonly completions: Repository<HabitCompletion>,
     private readonly habits: HabitsService,
+    private readonly streaks: StreaksService,
     private readonly users: UsersService,
   ) {}
 
@@ -32,22 +33,32 @@ export class CompletionsService {
       throw this.businessError('Archived habits cannot be logged');
     }
 
-    const date = await this.resolveDate(userId, dto.date);
+    const today = await this.users.getTodayKey(userId);
+    const date = this.resolveDate(today, dto.date);
     if (!isDueOn(habit.schedule.daysOfWeek, date)) {
       throw this.businessError('Habit is not scheduled on this date');
     }
 
-    await this.completions.upsert(
-      { habitId, userId, date, status: dto.status },
-      ['habitId', 'date'],
-    );
-    return this.completions.findOneByOrFail({ habitId, date });
+    return this.completions.manager.transaction(async (manager) => {
+      await manager.upsert(
+        HabitCompletion,
+        { habitId, userId, date, status: dto.status },
+        ['habitId', 'date'],
+      );
+      await this.streaks.recalculate(manager, habit, today);
+      return manager.findOneByOrFail(HabitCompletion, { habitId, date });
+    });
   }
 
   async undo(userId: string, habitId: string, dateKey: string): Promise<void> {
-    await this.habits.getOwned(userId, habitId);
-    const date = await this.resolveDate(userId, dateKey);
-    await this.completions.delete({ habitId, userId, date });
+    const habit = await this.habits.getOwned(userId, habitId);
+    const today = await this.users.getTodayKey(userId);
+    const date = this.resolveDate(today, dateKey);
+
+    await this.completions.manager.transaction(async (manager) => {
+      await manager.delete(HabitCompletion, { habitId, userId, date });
+      await this.streaks.recalculate(manager, habit, today);
+    });
   }
 
   async history(userId: string, query: CompletionHistoryQueryDto) {
@@ -76,12 +87,7 @@ export class CompletionsService {
     };
   }
 
-  private async resolveDate(
-    userId: string,
-    requested?: string,
-  ): Promise<string> {
-    const { timezone } = await this.users.getById(userId);
-    const today = getLocalDateKey(timezone);
+  private resolveDate(today: string, requested?: string): string {
     if (!requested) return today;
 
     const earliest = shiftDateKey(today, -MAX_BACKDATE_DAYS);

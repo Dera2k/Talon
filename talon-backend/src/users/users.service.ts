@@ -4,6 +4,7 @@ import { QueryFailedError, Repository } from 'typeorm';
 import { ErrorCode } from '@common/enums/error-code.enum';
 import { AppException } from '@common/exceptions/app.exception';
 import { User } from './entities/user.entity';
+import { getLocalDateKey } from '@common/utils/timezone.util';
 
 const PG_UNIQUE_VIOLATION = '23505';
 
@@ -85,5 +86,10 @@ export class UsersService {
 
   async softDelete(id: string): Promise<void> {
     await this.users.softDelete(id);
+  }
+
+  async getTodayKey(id: string): Promise<string> {
+    const { timezone } = await this.getById(id);
+    return getLocalDateKey(timezone);
   }
 }

@@ -17,7 +17,8 @@
       "@settings/*": ["src/settings/*"],
       "@habits/*": ["src/habits/*"],
       "@schedules/*": ["src/schedules/*"],
-      "@completions/*": ["src/completions/*"]
+      "@completions/*": ["src/completions/*"],
+      "@streaks/*": ["src/streaks/*"]
     },
 
     "outDir": "./dist",

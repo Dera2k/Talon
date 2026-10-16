@@ -18,7 +18,8 @@
       "@habits/*": ["src/habits/*"],
       "@schedules/*": ["src/schedules/*"],
       "@completions/*": ["src/completions/*"],
-      "@streaks/*": ["src/streaks/*"]
+      "@streaks/*": ["src/streaks/*"],
+      "@notifications/*": ["src/notifications/*"]
     },
 
     "outDir": "./dist",

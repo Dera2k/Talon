@@ -35,5 +35,11 @@ export const validationSchema = Joi.object({
   PASSWORD_RESET_URL: Joi.string()
     .uri()
     .default('http://localhost:3000/reset-password'),
-  CORS_ORIGINS: Joi.string().allow('').default(''),
+  CORS_ORIGINS: Joi.string()
+    .allow('')
+    .when('NODE_ENV', {
+      is: 'production',
+      then: Joi.string().min(1).required(),
+      otherwise: Joi.string().allow('').default(''),
+    }),
 });

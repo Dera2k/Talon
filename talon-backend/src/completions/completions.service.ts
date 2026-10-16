@@ -11,6 +11,13 @@ import { CompletionHistoryQueryDto } from './dto/completion-history-query.dto';
 import { LogCompletionDto } from './dto/log-completion.dto';
 import { HabitCompletion } from './entities/habit-completion.entity';
 import { CacheService } from '@cache/cache.service';
+import { CompletionStatus } from '@common/enums/completion-status.enum';
+
+export interface DailyStatusCount {
+  date: string;
+  status: CompletionStatus;
+  count: number;
+}
 
 const MAX_BACKDATE_DAYS = 7;
 
@@ -96,6 +103,23 @@ export class CompletionsService {
 
   findByDate(userId: string, date: string): Promise<HabitCompletion[]> {
     return this.completions.findBy({ userId, date });
+  }
+
+  countByDateAndStatus(
+    userId: string,
+    from: string,
+    to: string,
+  ): Promise<DailyStatusCount[]> {
+    return this.completions
+      .createQueryBuilder('c')
+      .select(`to_char(c.date, 'YYYY-MM-DD')`, 'date')
+      .addSelect('c.status', 'status')
+      .addSelect('COUNT(*)::int', 'count')
+      .where('c.userId = :userId', { userId })
+      .andWhere('c.date BETWEEN :from AND :to', { from, to })
+      .groupBy('c.date')
+      .addGroupBy('c.status')
+      .getRawMany<DailyStatusCount>();
   }
 
   private resolveDate(today: string, requested?: string): string {

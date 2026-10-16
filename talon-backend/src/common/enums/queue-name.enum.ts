@@ -1,6 +1,6 @@
 export enum QueueName {
   EMAIL = 'email',
-  REMINDER = 'reminder',
+  REMINDERS = 'reminders',
   NOTIFICATION = 'notification',
   STREAK = 'streak',
   ANALYTICS = 'analytics',

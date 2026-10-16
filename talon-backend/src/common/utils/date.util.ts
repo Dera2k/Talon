@@ -20,3 +20,22 @@ export function shiftDateKey(dateKey: string, days: number): string {
   date.setUTCDate(date.getUTCDate() + days);
   return date.toISOString().slice(0, 10);
 }
+
+export function daysBetween(from: string, to: string): number {
+  return Math.round(
+    (Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) /
+      86_400_000,
+  );
+}
+
+export function eachDateKey(from: string, to: string): string[] {
+  const dates: string[] = [];
+  for (let date = from; date <= to; date = shiftDateKey(date, 1)) {
+    dates.push(date);
+  }
+  return dates;
+}
+
+export function startOfWeek(dateKey: string): string {
+  return shiftDateKey(dateKey, -((getWeekday(dateKey) + 6) % 7));
+}

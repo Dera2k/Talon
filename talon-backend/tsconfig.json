@@ -21,7 +21,9 @@
       "@streaks/*": ["src/streaks/*"],
       "@notifications/*": ["src/notifications/*"],
       "@cache/*": ["src/cache/*"],
-      "@dashboard/*": ["src/dashboard/*"]
+      "@dashboard/*": ["src/dashboard/*"],
+      "@analytics/*": ["src/analytics/*"],
+      "@queues/*": ["src/queues/*"]
     },
 
     "outDir": "./dist",

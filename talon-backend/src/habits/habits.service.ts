@@ -105,4 +105,11 @@ export class HabitsService {
       relations: { schedule: true },
     });
   }
+
+  findAllForAnalytics(userId: string): Promise<Habit[]> {
+    return this.habits.find({
+      where: { userId },
+      relations: { schedule: true },
+    });
+  }
 }

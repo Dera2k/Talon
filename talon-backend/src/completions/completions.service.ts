@@ -105,6 +105,10 @@ export class CompletionsService {
     return this.completions.findBy({ userId, date });
   }
 
+  hasEntry(habitId: string, date: string): Promise<boolean> {
+    return this.completions.existsBy({ habitId, date });
+  }
+
   countByDateAndStatus(
     userId: string,
     from: string,

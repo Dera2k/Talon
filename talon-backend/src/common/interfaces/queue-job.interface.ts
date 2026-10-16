@@ -1,6 +1,6 @@
 export interface ReminderJob {
   userId: string;
   habitId: string;
-  habitName: string;
+  // User-local "YYYY-MM-DD" the reminder is for
   dateKey: string;
 }

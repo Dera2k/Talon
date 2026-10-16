@@ -112,4 +112,8 @@ export class HabitsService {
       relations: { schedule: true },
     });
   }
+
+  findActiveById(userId: string, id: string): Promise<Habit | null> {
+    return this.habits.findOneBy({ id, userId, archivedAt: IsNull() });
+  }
 }

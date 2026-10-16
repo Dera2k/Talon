@@ -22,7 +22,9 @@ import { StreaksModule } from '@streaks/streaks.module';
 import { NotificationsModule } from '@notifications/notifications.module';
 import { DashboardModule } from '@dashboard/dashboard.module';
 import { AnalyticsModule } from '@analytics/analytics.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import { QueueModule } from '@queues/queue.module';
+import { SchedulerModule } from '@scheduler/scheduler.module';
 import { AllExceptionsFilter } from '@common/filters/all-exceptions.filter';
 import { ResponseInterceptor } from '@common/interceptors/response.interceptor';
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
@@ -80,6 +82,8 @@ import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
     DashboardModule,
     AnalyticsModule,
     QueueModule,
+    ScheduleModule.forRoot(),
+    SchedulerModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },

@@ -23,7 +23,8 @@
       "@cache/*": ["src/cache/*"],
       "@dashboard/*": ["src/dashboard/*"],
       "@analytics/*": ["src/analytics/*"],
-      "@queues/*": ["src/queues/*"]
+      "@queues/*": ["src/queues/*"],
+      "@scheduler/*": ["src/scheduler/*"]
     },
 
     "outDir": "./dist",

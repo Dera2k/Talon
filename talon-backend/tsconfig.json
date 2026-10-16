@@ -16,7 +16,8 @@
       "@mail/*": ["src/mail/*"],
       "@settings/*": ["src/settings/*"],
       "@habits/*": ["src/habits/*"],
-      "@schedules/*": ["src/schedules/*"]
+      "@schedules/*": ["src/schedules/*"],
+      "@completions/*": ["src/completions/*"]
     },
 
     "outDir": "./dist",

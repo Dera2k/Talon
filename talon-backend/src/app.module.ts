@@ -17,6 +17,7 @@ import { MailModule } from '@mail/mail.module';
 import { HabitsModule } from '@habits/habits.module';
 import { SettingsModule } from '@settings/settings.module';
 import { SchedulesModule } from '@schedules/schedules.module';
+import { CompletionsModule } from '@completions/completions.module';
 import { AllExceptionsFilter } from '@common/filters/all-exceptions.filter';
 import { ResponseInterceptor } from '@common/interceptors/response.interceptor';
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
@@ -68,6 +69,7 @@ import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
     SettingsModule,
     HabitsModule,
     SchedulesModule,
+    CompletionsModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },

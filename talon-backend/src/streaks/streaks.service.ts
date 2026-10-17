@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
+import { CompletionStatus } from '@common/enums/completion-status.enum';
 import { calculateStreaks } from '@common/utils/streak.util';
 import { HabitCompletion } from '@completions/entities/habit-completion.entity';
 import { Habit } from '@habits/entities/habit.entity';
@@ -23,10 +24,10 @@ export class StreaksService {
     habit: HabitWithSchedule,
     today: string,
   ): Promise<Streak> {
-    const rows = await manager.find(HabitCompletion, {
+    const rows = (await manager.find(HabitCompletion, {
       where: { habitId: habit.id },
       select: { date: true, status: true },
-    });
+    })) as { date: string; status: CompletionStatus }[];
     const statusByDate = new Map(rows.map((row) => [row.date, row.status]));
     const result = calculateStreaks(
       habit.schedule.daysOfWeek,
@@ -50,13 +51,13 @@ export class StreaksService {
   async getForHabit(userId: string, habitId: string): Promise<Streak> {
     const habit = await this.habits.getOwned(userId, habitId);
     const today = await this.users.getTodayKey(userId);
-    const existing = await this.streaks.findOneBy({ habitId });
+    const existing: Streak | null = await this.streaks.findOneBy({ habitId });
     return this.refreshIfStale(habit, existing, today);
   }
 
   async listForUser(userId: string): Promise<Streak[]> {
     const today = await this.users.getTodayKey(userId);
-    const habits = await this.habits.findAllActive(userId);
+    const habits: Habit[] = await this.habits.findAllActive(userId);
     return this.refreshAll(userId, habits, today);
   }
 
@@ -65,7 +66,7 @@ export class StreaksService {
     habits: HabitWithSchedule[],
     today: string,
   ): Promise<Streak[]> {
-    const existing = await this.streaks.findBy({ userId });
+    const existing: Streak[] = await this.streaks.findBy({ userId });
     const byHabit = new Map(existing.map((streak) => [streak.habitId, streak]));
 
     const result: Streak[] = [];

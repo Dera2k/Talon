@@ -1,11 +1,13 @@
-import { Module } from '@nestjs/common';
+import { Module, Type, DynamicModule } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { ValidationPipe } from '@nestjs/common';
 import { createKeyv } from '@keyv/redis';
+import { SchedulerModule } from '@scheduler/scheduler.module';
 
 import { configuration } from './config/configuration';
 import { validationSchema } from './config/validation.config';
@@ -28,12 +30,9 @@ import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
 
 const isTest = process.env.NODE_ENV === 'test';
 
-const conditionalImports = isTest
+const conditionalImports: (Type<unknown> | DynamicModule)[] = isTest
   ? []
-  : [
-      require('@nestjs/schedule').ScheduleModule.forRoot(),
-      require('@scheduler/scheduler.module').SchedulerModule,
-    ];
+  : [ScheduleModule.forRoot(), SchedulerModule];
 
 @Module({
   imports: [

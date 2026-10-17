@@ -1,36 +1,71 @@
+# Talon Frontend
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
-First, run the development server:
+First, install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then, run the development server:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3001](http://localhost:3001) with your browser to see the result.
 
-## Learn More
+## Environment
 
-To learn more about Next.js, take a look at the following resources:
+Create `.env.local` from `.env.example`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+cp .env.example .env.local
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable | Description |
+|----------|-------------|
+| `API_URL` | Origin of the Talon API backend (server-only, no `NEXT_PUBLIC_` prefix) |
+
+The browser calls `/api/*` on the Next origin, which rewrites to `API_URL` via `next.config.ts`.
+
+## Scripts
+
+| Script | Description |
+|----------|-------------|
+| `pnpm dev` | Start dev server on port 3001 |
+| `pnpm build` | Production build |
+| `pnpm start` | Start production server on port 3001 |
+| `pnpm lint` | Run ESLint |
+| `pnpm format` | Run Prettier |
+| `pnpm typecheck` | Run TypeScript type checking |
+| `pnpm api:types` | Generate `lib/api/schema.d.ts` from the API OpenAPI spec |
+| `pnpm analyze` | Analyze bundle size |
+| `pnpm test` | Run unit tests |
+| `pnpm test:e2e` | Run E2E tests |
+
+## Architecture
+
+- Browser calls `/api/*` on the Next origin (port 3001)
+- `next.config.ts` rewrites `/api/:path*` to `${API_URL}/:path*`
+- API backend runs on port 3000
+- Type import alias: `@/*` maps to project root
+
+## Tech Stack
+
+- Next.js 16 (App Router)
+- React 19
+- Tailwind CSS v4
+- TypeScript (strict mode)
+- @tanstack/react-query
+- Radix UI primitives
+- openapi-typescript for API client types
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

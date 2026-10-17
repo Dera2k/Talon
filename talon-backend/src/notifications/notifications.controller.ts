@@ -1,3 +1,4 @@
+import { ApiExtraModels, ApiResponse } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -14,11 +15,13 @@ import { NotificationQueryDto } from './dto/notification-query.dto';
 import { NotificationResponseDto } from './dto/notification-response.dto';
 import { NotificationsService } from './notifications.service';
 
+@ApiExtraModels(NotificationResponseDto, MarkReadDto)
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notifications: NotificationsService) {}
 
   @Get()
+  @ApiResponse({ type: NotificationResponseDto })
   async list(
     @CurrentUser() user: AuthenticatedUser,
     @Query() query: NotificationQueryDto,

@@ -98,6 +98,15 @@ export class HabitsService {
     }
   }
 
+  async restore(userId: string, id: string): Promise<Habit> {
+    const habit = await this.getOwned(userId, id);
+    if (habit.archivedAt) {
+      await this.habits.update(habit.id, { archivedAt: null });
+      await this.cache.invalidateDashboard(userId);
+    }
+    return this.getOwned(userId, id);
+  }
+
   findAllActive(userId: string): Promise<Habit[]> {
     return this.habits.find({
       where: { userId, archivedAt: IsNull() },

@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
@@ -24,6 +25,15 @@ async function bootstrap(): Promise<void> {
     origin: parseOrigins(process.env.CORS_ORIGINS),
     credentials: true,
   });
+
+  const config = new DocumentBuilder()
+    .setTitle('Talon API')
+    .setDescription('Habit tracking platform REST API')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, document);
 
   await app.listen(process.env.PORT ?? 3000);
 }

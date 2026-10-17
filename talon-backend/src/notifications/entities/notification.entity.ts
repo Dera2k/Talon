@@ -44,10 +44,10 @@ export class Notification {
   createdAt!: Date;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_id' })
   user!: User;
 
   @ManyToOne(() => Habit, { onDelete: 'SET NULL', nullable: true })
-  @JoinColumn({ name: 'habitId' })
+  @JoinColumn({ name: 'habit_id' })
   habit!: Habit | null;
 }

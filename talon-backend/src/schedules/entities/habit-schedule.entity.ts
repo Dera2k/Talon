@@ -20,6 +20,6 @@ export class HabitSchedule {
   daysOfWeek!: number[];
 
   @OneToOne(() => Habit, (habit) => habit.schedule, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'habitId' })
+  @JoinColumn({ name: 'habit_id' })
   habit!: Habit;
 }

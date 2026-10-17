@@ -32,6 +32,12 @@ export class Habit {
   @Column({ type: 'enum', enum: HabitColor })
   color!: HabitColor;
 
+  @Column({ type: 'varchar', length: 32, default: 'target' })
+  icon!: string;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  category!: string | null;
+
   @Column({ type: 'enum', enum: HabitFrequency })
   frequency!: HabitFrequency;
 
@@ -48,7 +54,7 @@ export class Habit {
   updatedAt!: Date;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_id' })
   user!: User;
 
   @OneToOne(() => HabitSchedule, (schedule) => schedule.habit)

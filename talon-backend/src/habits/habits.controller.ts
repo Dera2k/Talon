@@ -1,3 +1,4 @@
+import { ApiExtraModels, ApiResponse } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -19,11 +20,13 @@ import { HabitResponseDto } from './dto/habit-response.dto';
 import { UpdateHabitDto } from './dto/update-habit.dto';
 import { HabitsService } from './habits.service';
 
+@ApiExtraModels(CreateHabitDto, HabitResponseDto, UpdateHabitDto)
 @Controller('habits')
 export class HabitsController {
   constructor(private readonly habits: HabitsService) {}
 
   @Post()
+  @ApiResponse({ type: HabitResponseDto, status: 201 })
   async create(
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: CreateHabitDto,
@@ -41,6 +44,7 @@ export class HabitsController {
   }
 
   @Get(':id')
+  @ApiResponse({ type: HabitResponseDto })
   async getOne(
     @CurrentUser() user: AuthenticatedUser,
     @Param('id', ParseUUIDPipe) id: string,
@@ -49,6 +53,7 @@ export class HabitsController {
   }
 
   @Patch(':id')
+  @ApiResponse({ type: HabitResponseDto })
   async update(
     @CurrentUser() user: AuthenticatedUser,
     @Param('id', ParseUUIDPipe) id: string,
@@ -64,5 +69,14 @@ export class HabitsController {
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<void> {
     await this.habits.archive(user.id, id);
+  }
+
+  @Post(':id/restore')
+  @ApiResponse({ type: HabitResponseDto })
+  async restore(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<HabitResponseDto> {
+    return HabitResponseDto.from(await this.habits.restore(user.id, id));
   }
 }

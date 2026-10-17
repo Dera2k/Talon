@@ -33,6 +33,6 @@ export class Streak {
   calculatedOn!: string;
 
   @OneToOne(() => Habit, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'habitId' })
+  @JoinColumn({ name: 'habit_id' })
   habit!: Habit;
 }

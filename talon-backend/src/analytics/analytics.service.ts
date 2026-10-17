@@ -5,14 +5,18 @@ import { AppException } from '@common/exceptions/app.exception';
 import {
   daysBetween,
   eachDateKey,
+  getWeekday,
   isDueOn,
   isValidDateKey,
   startOfWeek,
 } from '@common/utils/date.util';
 import { getLocalDateKey } from '@common/utils/timezone.util';
 import { CompletionsService } from '@completions/completions.service';
+import { DailyStatusCount } from '@completions/completions.service';
 import { HabitsService } from '@habits/habits.service';
+import { Habit } from '@habits/entities/habit.entity';
 import { StreaksService } from '@streaks/streaks.service';
+import { Streak } from '@streaks/entities/streak.entity';
 import { UsersService } from '@users/users.service';
 import { AnalyticsRangeDto, StatsInterval } from './dto/analytics-query.dto';
 import {
@@ -46,12 +50,25 @@ export class AnalyticsService {
   ): Promise<PeriodStatsDto[]> {
     const days = await this.buildDailySeries(userId, range);
     const periods = new Map<string, PeriodStatsDto>();
+    const WEEKDAY_NAMES = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
 
     for (const day of days) {
-      const period =
-        interval === StatsInterval.WEEK
-          ? startOfWeek(day.date)
-          : day.date.slice(0, 7);
+      let period: string;
+      if (interval === StatsInterval.WEEK) {
+        period = startOfWeek(day.date);
+      } else if (interval === StatsInterval.WEEKDAY) {
+        period = WEEKDAY_NAMES[getWeekday(day.date)];
+      } else {
+        period = day.date.slice(0, 7);
+      }
       const bucket = periods.get(period) ?? {
         period,
         due: 0,
@@ -77,10 +94,16 @@ export class AnalyticsService {
   }
 
   async getStreakStats(userId: string): Promise<StreakStatsDto> {
-    const today = await this.users.getTodayKey(userId);
-    const habits = await this.habits.findAllActive(userId);
-    const streaks = await this.streaks.refreshAll(userId, habits, today);
-    const streakByHabit = new Map(streaks.map((s) => [s.habitId, s]));
+    const today: string = await this.users.getTodayKey(userId);
+    const habits: Habit[] = await this.habits.findAllActive(userId);
+    const streaks: Streak[] = await this.streaks.refreshAll(
+      userId,
+      habits,
+      today,
+    );
+    const streakByHabit = new Map<string, (typeof streaks)[number]>(
+      streaks.map((s) => [s.habitId, s]),
+    );
 
     const items = habits.map((habit) => ({
       habitId: habit.id,
@@ -103,14 +126,13 @@ export class AnalyticsService {
     this.assertValidRange(from, to);
 
     const { timezone } = await this.users.getById(userId);
-    const today = getLocalDateKey(timezone);
-    const end = to < today ? to : today;
+    const today: string = getLocalDateKey(timezone);
+    const end: string = to < today ? to : today;
     if (from > end) return [];
 
-    const [habits, counts] = await Promise.all([
-      this.habits.findAllForAnalytics(userId),
-      this.completions.countByDateAndStatus(userId, from, end),
-    ]);
+    const habits: Habit[] = await this.habits.findAllForAnalytics(userId);
+    const counts: DailyStatusCount[] =
+      await this.completions.countByDateAndStatus(userId, from, end);
 
     const lifespans = habits.map((habit) => ({
       daysOfWeek: habit.schedule.daysOfWeek,
@@ -131,7 +153,7 @@ export class AnalyticsService {
       countsByDate.set(date, entry);
     }
 
-    return eachDateKey(from, end).map((date) => ({
+    return eachDateKey(from, end).map((date: string) => ({
       date,
       due: lifespans.filter(
         (h) =>

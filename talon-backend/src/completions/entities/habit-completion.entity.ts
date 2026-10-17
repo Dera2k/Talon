@@ -34,6 +34,6 @@ export class HabitCompletion {
   createdAt!: Date;
 
   @ManyToOne(() => Habit, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'habitId' })
+  @JoinColumn({ name: 'habit_id' })
   habit!: Habit;
 }

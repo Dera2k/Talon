@@ -5,6 +5,7 @@ const DATE_KEY = /^\d{4}-\d{2}-\d{2}$/;
 export enum StatsInterval {
   WEEK = 'week',
   MONTH = 'month',
+  WEEKDAY = 'weekday',
 }
 
 export class AnalyticsRangeDto {

@@ -5,7 +5,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { ValidationPipe } from '@nestjs/common';
-import { ScheduleModule } from '@nestjs/schedule';
 import { createKeyv } from '@keyv/redis';
 
 import { configuration } from './config/configuration';
@@ -23,10 +22,18 @@ import { NotificationsModule } from '@notifications/notifications.module';
 import { DashboardModule } from '@dashboard/dashboard.module';
 import { AnalyticsModule } from '@analytics/analytics.module';
 import { QueueModule } from '@queues/queue.module';
-import { SchedulerModule } from '@scheduler/scheduler.module';
 import { AllExceptionsFilter } from '@common/filters/all-exceptions.filter';
 import { ResponseInterceptor } from '@common/interceptors/response.interceptor';
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
+
+const isTest = process.env.NODE_ENV === 'test';
+
+const conditionalImports = isTest
+  ? []
+  : [
+      require('@nestjs/schedule').ScheduleModule.forRoot(),
+      require('@scheduler/scheduler.module').SchedulerModule,
+    ];
 
 @Module({
   imports: [
@@ -77,8 +84,6 @@ import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
       },
     }),
 
-    ScheduleModule.forRoot(),
-
     HealthModule,
     UsersModule,
     AuthModule,
@@ -90,7 +95,7 @@ import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
     DashboardModule,
     AnalyticsModule,
     QueueModule,
-    SchedulerModule,
+    ...conditionalImports,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },

@@ -37,11 +37,8 @@ export class CleanupCron {
     );
     await this.safely('soft-deleted users', () =>
       this.dataSource
-        .createQueryBuilder()
-        .delete()
-        .from(User)
-        .where('deleted_at < :cutoff', { cutoff })
-        .execute(),
+        .getRepository(User)
+        .delete({ deletedAt: LessThan(cutoff) }),
     );
   }
 

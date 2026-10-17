@@ -5,5 +5,26 @@
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
-  }
+  },
+  "setupFiles": ["<rootDir>/jest-setup.ts"],
+  "moduleNameMapper": {
+    "^@common/(.*)$": "<rootDir>/../src/common/$1",
+    "^@users/(.*)$": "<rootDir>/../src/users/$1",
+    "^@auth/(.*)$": "<rootDir>/../src/auth/$1",
+    "^@mail/(.*)$": "<rootDir>/../src/mail/$1",
+    "^@settings/(.*)$": "<rootDir>/../src/settings/$1",
+    "^@habits/(.*)$": "<rootDir>/../src/habits/$1",
+    "^@schedules/(.*)$": "<rootDir>/../src/schedules/$1",
+    "^@completions/(.*)$": "<rootDir>/../src/completions/$1",
+    "^@streaks/(.*)$": "<rootDir>/../src/streaks/$1",
+    "^@notifications/(.*)$": "<rootDir>/../src/notifications/$1",
+    "^@dashboard/(.*)$": "<rootDir>/../src/dashboard/$1",
+    "^@analytics/(.*)$": "<rootDir>/../src/analytics/$1",
+    "^@cache/(.*)$": "<rootDir>/../src/cache/$1",
+    "^@queues/(.*)$": "<rootDir>/../src/queues/$1",
+    "^@scheduler/(.*)$": "<rootDir>/../src/scheduler/$1"
+  },
+  "transformIgnorePatterns": [
+    "node_modules/(?!.*/@nestjs/(schedule|mapped-types)/)"
+  ]
 }

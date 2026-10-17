@@ -11,10 +11,9 @@ const DUE_REMINDERS_SQL = `
     h.user_id AS "userId",
     to_char(now() AT TIME ZONE u.timezone, 'YYYY-MM-DD') AS "dateKey"
   FROM habits h
-  JOIN users u ON u.id = h.user_id
+  JOIN users u ON u.id = h.user_id AND u.deleted_at IS NULL
   JOIN habit_schedules s ON s.habit_id = h.id
   WHERE h.archived_at IS NULL
-    AND u.timezone IN (SELECT name FROM pg_timezone_names)
     AND h.reminder_time = to_char(now() AT TIME ZONE u.timezone, 'HH24:MI')
     AND EXTRACT(DOW FROM now() AT TIME ZONE u.timezone)::int = ANY (s.days_of_week)
     AND NOT EXISTS (

@@ -26,11 +26,13 @@ export const validationSchema = Joi.object({
     .pattern(/^\d+[smhd]$/)
     .default('7d'),
 
-  RESEND_API_KEY: Joi.string().when('NODE_ENV', {
-    is: 'production',
-    then: Joi.required(),
-    otherwise: Joi.optional(),
-  }),
+  RESEND_API_KEY: Joi.string()
+    .allow('')
+    .when('NODE_ENV', {
+      is: 'production',
+      then: Joi.required(),
+      otherwise: Joi.optional(),
+    }),
   MAIL_FROM: Joi.string().default('Talon <onboarding@resend.dev>'),
   PASSWORD_RESET_URL: Joi.string()
     .uri()

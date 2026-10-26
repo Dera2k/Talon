@@ -19,25 +19,17 @@ export type Query = Record<string, QueryValue>;
 type RequestOptions = { query?: Query; body?: unknown; skipAuth?: boolean };
 
 let authHooks: AuthHooks | null = null;
-let refreshInFlight: Promise<string | null> | null = null;
 
 // Registered once by the auth layer, so this module never imports it (no circular dependency).
 export function configureApiClient(hooks: AuthHooks): void {
   authHooks = hooks;
-  refreshInFlight = null;
 }
 
 // The backend rotates refresh tokens and revokes the whole token family when a
 // reused token is presented. Concurrent 401s must therefore share one refresh,
 // otherwise the second call fails and signs the user out mid-session.
 function refreshOnce(hooks: AuthHooks): Promise<string | null> {
-  refreshInFlight ??= hooks
-    .refreshAccessToken()
-    .catch(() => null)
-    .finally(() => {
-      refreshInFlight = null;
-    });
-  return refreshInFlight;
+  return hooks.refreshAccessToken();
 }
 
 function buildUrl(path: string, query?: Query): string {
@@ -105,7 +97,17 @@ async function request<T>(
   let response = await send(method, path, options, hooks.getAccessToken());
 
   if (response.status === 401) {
-    const token = await refreshOnce(hooks);
+    let token: string | null = null;
+    let refreshError: unknown = null;
+    try {
+      token = await refreshOnce(hooks);
+    } catch (error) {
+      refreshError = error;
+    }
+    if (refreshError) {
+      // Network/server error during refresh: don't log the user out, surface the error.
+      throw refreshError;
+    }
     if (!token) {
       hooks.onAuthFailure();
       return parse<T>(response);

@@ -671,8 +671,13 @@ export interface components {
         DashboardHabitDto: {
             id: string;
             name: string;
+            description: string | null;
             /** @enum {string} */
             color: "red" | "blue" | "green" | "yellow" | "purple" | "pink" | "orange" | "indigo" | "teal" | "gray";
+            icon: string;
+            /** @enum {string} */
+            frequency: "daily" | "weekly";
+            weekdays: number[];
             reminderTime: string | null;
             /** @enum {string|null} */
             status: "completed" | "skipped" | null;

@@ -78,6 +78,7 @@ export type StreakList = ResponseBody<"/streaks", "get">;
 
 // Dashboard & analytics
 export type Dashboard = ResponseBody<"/dashboard/today", "get">;
+export type DashboardHabit = Dashboard["habits"][number];
 export type Heatmap = ResponseBody<"/analytics/heatmap", "get">;
 export type AnalyticsStats = ResponseBody<"/analytics/stats", "get">;
 export type AnalyticsStreaks = ResponseBody<"/analytics/streaks", "get">;

@@ -53,7 +53,11 @@ export class DashboardService {
     const habits = dueHabits.map((habit) => ({
       id: habit.id,
       name: habit.name,
+      description: habit.description,
       color: habit.color,
+      icon: habit.icon,
+      frequency: habit.frequency,
+      weekdays: habit.schedule?.daysOfWeek ?? [],
       reminderTime: habit.reminderTime,
       status: statusByHabit.get(habit.id) ?? null,
       currentStreak: streakByHabit.get(habit.id)?.currentStreak ?? 0,

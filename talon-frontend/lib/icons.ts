@@ -15,6 +15,7 @@ import {
   Flame,
   Footprints,
   Gamepad2,
+  GlassWater,
   Heart,
   Home,
   Leaf,
@@ -32,7 +33,6 @@ import {
   Timer,
   Utensils,
   Wallet,
-  Water,
   Zap,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -71,7 +71,7 @@ export const iconOptions: { value: string; label: string; icon: LucideIcon }[] =
   { value: "timer", label: "Timer", icon: Timer },
   { value: "utensils", label: "Utensils", icon: Utensils },
   { value: "wallet", label: "Wallet", icon: Wallet },
-  { value: "water", label: "Water", icon: Water },
+  { value: "water", label: "Water", icon: GlassWater },
   { value: "zap", label: "Zap", icon: Zap },
 ];
 

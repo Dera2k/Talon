@@ -1,4 +1,4 @@
-import { ApiExtraModels, ApiResponse } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -13,9 +13,10 @@ import { AuthenticatedUser } from '@common/interfaces/authenticated-user.interfa
 import { MarkReadDto } from './dto/mark-read.dto';
 import { NotificationQueryDto } from './dto/notification-query.dto';
 import { NotificationResponseDto } from './dto/notification-response.dto';
+import { UnreadCountDto } from './dto/unread-count.dto';
 import { NotificationsService } from './notifications.service';
 
-@ApiExtraModels(NotificationResponseDto, MarkReadDto)
+@ApiExtraModels(NotificationResponseDto, MarkReadDto, UnreadCountDto)
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notifications: NotificationsService) {}
@@ -34,9 +35,10 @@ export class NotificationsController {
   }
 
   @Get('unread-count')
+  @ApiOkResponse({ type: UnreadCountDto })
   async unreadCount(
     @CurrentUser() user: AuthenticatedUser,
-  ): Promise<{ count: number }> {
+  ): Promise<UnreadCountDto> {
     return { count: await this.notifications.countUnread(user.id) };
   }
 

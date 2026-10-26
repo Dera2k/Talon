@@ -5,29 +5,21 @@ export type FormErrors<F extends string> = {
   general?: string;
 };
 
-// class-validator messages start with the property name ("name must be..."),
-// "each value in <name>", or "All <name>'s elements must be unique".
-const FIELD_PATTERNS = [/^All ([A-Za-z_]\w*)'s/, /^(?:each value in )?([A-Za-z_]\w*)/];
+// class-validator messages start with the property name ("name must be...") or "each value in <name>".
+const FIELD_PATTERN = /^(?:each value in )?([A-Za-z_]\w*)/;
 
-function extractField(message: string): string | undefined {
-  for (const pattern of FIELD_PATTERNS) {
-    const match = pattern.exec(message);
-    if (match) return match[1];
-  }
-  return undefined;
-}
-
-export function toFormErrors<F extends string>(
-  error: unknown,
-  fields: readonly F[],
-): FormErrors<F> {
+export function toFormErrors<F extends string>(error: unknown, fields: readonly F[]): FormErrors<F> {
   if (!isApiError(error)) return { fields: {}, general: "Something went wrong. Try again." };
+
+  if (error.status === 429) {
+    return { fields: {}, general: "Too many attempts. Wait a minute and try again." };
+  }
 
   const result: FormErrors<F> = { fields: {} };
   const unmatched: string[] = [];
 
   for (const message of error.details ?? []) {
-    const name = extractField(message);
+    const name = FIELD_PATTERN.exec(message)?.[1];
     const field = fields.find((candidate) => candidate === name);
     if (field) result.fields[field] ??= message;
     else unmatched.push(message);

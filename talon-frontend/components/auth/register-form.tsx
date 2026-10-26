@@ -90,7 +90,7 @@ export function RegisterForm() {
           type="password"
           autoComplete="new-password"
           required
-          minLength={12}
+          minLength={8}
           maxLength={128}
           value={password}
           onChange={(event) => setPassword(event.target.value)}

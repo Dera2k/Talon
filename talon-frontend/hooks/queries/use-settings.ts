@@ -25,10 +25,16 @@ export function useUpdateSettings() {
 // Both calls revoke every session server-side, so the client only has to drop its local state.
 export function useChangePassword() {
   const { endSession } = useAuth();
-  return useMutation({ mutationFn: settingsApi.changePassword, onSuccess: () => endSession() });
+  return useMutation({
+    mutationFn: settingsApi.changePassword,
+    onSuccess: () => endSession({ redirectTo: "/login?reset=1" }),
+  });
 }
 
 export function useDeleteAccount() {
   const { endSession } = useAuth();
-  return useMutation({ mutationFn: settingsApi.deleteAccount, onSuccess: () => endSession() });
+  return useMutation({
+    mutationFn: settingsApi.deleteAccount,
+    onSuccess: () => endSession({ redirectTo: "/" }),
+  });
 }

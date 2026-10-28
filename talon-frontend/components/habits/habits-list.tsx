@@ -5,11 +5,11 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { HabitCard } from "@/components/habits/habit-card";
+import { HabitCardGridSkeleton } from "@/components/habits/habit-card-skeleton";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { QueryError } from "@/components/shared/query-error";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useHabits } from "@/hooks/queries/use-habits";
 import { cn } from "@/lib/utils";
 
@@ -70,11 +70,7 @@ function HabitsListContent({ tab }: { tab: Tab }) {
       />
 
       {habits.isPending ? (
-        <div className="grid gap-4 md:grid-cols-2" aria-busy="true">
-          {Array.from({ length: 4 }, (_, i) => (
-            <Skeleton key={i} className="h-28 rounded-xl" />
-          ))}
-        </div>
+        <HabitCardGridSkeleton />
       ) : habits.isError ? (
         <QueryError message="Couldn’t load your habits." onRetry={() => void habits.refetch()} />
       ) : habits.data.items.length === 0 ? (

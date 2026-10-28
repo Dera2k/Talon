@@ -7,15 +7,15 @@ import { LOGIN_PATH } from "@/lib/auth/constants";
 import { useAuth } from "@/lib/auth/use-auth";
 
 export function AuthGate({ children }: { children: ReactNode }) {
-  const { status } = useAuth();
+  const { status, exitPath } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.replace(`${LOGIN_PATH}?next=${encodeURIComponent(pathname)}`);
+      router.replace(exitPath ?? `${LOGIN_PATH}?next=${encodeURIComponent(pathname)}`);
     }
-  }, [status, pathname, router]);
+  }, [status, exitPath, pathname, router]);
 
   if (status !== "authenticated") {
     return (

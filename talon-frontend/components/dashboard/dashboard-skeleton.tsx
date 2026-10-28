@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { HabitCardGridSkeleton } from "@/components/habits/habit-card-skeleton";
 
 export function DashboardSkeleton() {
   return (
@@ -11,10 +12,8 @@ export function DashboardSkeleton() {
         ))}
       </div>
       <Skeleton className="mt-10 h-6 w-24" />
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
-        {Array.from({ length: 2 }, (_, i) => (
-          <Skeleton key={i} className="h-36 rounded-xl" />
-        ))}
+      <div className="mt-4">
+        <HabitCardGridSkeleton count={2} tall />
       </div>
     </div>
   );

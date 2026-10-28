@@ -74,16 +74,13 @@ export type CompletionHistoryQuery = {
   limit?: number;
 };
 export type Streak = ResponseBody<"/habits/{habitId}/streak", "get">;
-export type StreakList = ResponseBody<"/streaks", "get">;
 
 // Dashboard & analytics
 export type Dashboard = ResponseBody<"/dashboard/today", "get">;
 export type DashboardHabit = Dashboard["habits"][number];
 export type Heatmap = ResponseBody<"/analytics/heatmap", "get">;
-export type AnalyticsStats = ResponseBody<"/analytics/stats", "get">;
 export type AnalyticsStreaks = ResponseBody<"/analytics/streaks", "get">;
 // "weekday" arrives in Phase 14 with the completion-by-weekday chart.
-export type StatsInterval = Exclude<QueryParams<"/analytics/stats", "get">["interval"], "weekday">;
 
 // Notifications
 export type Notification = ResponseBody<"/notifications", "get">;

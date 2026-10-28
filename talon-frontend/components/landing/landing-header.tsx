@@ -10,7 +10,7 @@ export function LandingHeader() {
         <Link href="/" className="flex items-center">
           <TalonLogo className="h-9 w-auto" />
         </Link>
-        <nav className="hidden items-center gap-8 text-[13px] text-muted-foreground md:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-8 text-[13px] text-muted-foreground md:flex">
           <a href="#how" className="hover:text-foreground">
             How it grips
           </a>

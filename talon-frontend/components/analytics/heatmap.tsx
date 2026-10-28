@@ -11,12 +11,19 @@ function cellColor(day: DayStat): string | undefined {
   return limeAt(Math.round(Math.max(MIN_INTENSITY, day.completed / day.due) * 100));
 }
 
+// The cells are color-only, so assistive tech gets the overall result as text instead.
+function summarize(days: DayStat[]): string {
+  const due = days.reduce((sum, day) => sum + day.due, 0);
+  const completed = days.reduce((sum, day) => sum + day.completed, 0);
+  return `Completion heatmap for the last ${days.length} days: ${completed} of ${due} scheduled check-ins completed.`;
+}
+
 export function Heatmap({ days }: { days: DayStat[] }) {
   return (
     <section className="rounded-2xl border bg-card p-6">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="font-display text-xl font-semibold">Last 90 days</h3>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <div aria-hidden="true" className="flex items-center gap-2 text-xs text-muted-foreground">
           Less
           {LEGEND_STEPS.map((step) => (
             <span
@@ -30,7 +37,7 @@ export function Heatmap({ days }: { days: DayStat[] }) {
       </div>
       <div
         role="img"
-        aria-label="Completion heatmap for the last 90 days"
+        aria-label={summarize(days)}
         className="grid grid-cols-[repeat(15,minmax(0,1fr))] gap-1 sm:grid-cols-[repeat(30,minmax(0,1fr))]"
       >
         {days.map((day) => {

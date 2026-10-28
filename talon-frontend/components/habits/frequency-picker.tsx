@@ -12,7 +12,7 @@ type FrequencyPickerProps = { value: HabitFrequency; onChange: (value: HabitFreq
 
 export function FrequencyPicker({ value, onChange }: FrequencyPickerProps) {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div role="group" aria-label="Frequency" className="grid grid-cols-2 gap-2">
       {OPTIONS.map((option) => (
         <button
           key={option.value}

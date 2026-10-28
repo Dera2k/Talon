@@ -19,8 +19,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   if (status !== "authenticated") {
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-background">
+      <div role="status" className="flex min-h-dvh items-center justify-center bg-background">
         <TalonMark className="h-8 w-8 animate-pulse text-primary" />
+        <span className="sr-only">Loading</span>
       </div>
     );
   }

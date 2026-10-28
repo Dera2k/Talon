@@ -11,7 +11,7 @@ export function WeekdayPicker({ value, onChange }: WeekdayPickerProps) {
   }
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div role="group" aria-label="Days of the week" className="flex flex-wrap gap-2">
       {WEEKDAYS.map(({ value: day, label }) => (
         <button
           key={day}

@@ -7,7 +7,7 @@ type IconPickerProps = { value: string; onChange: (icon: string) => void };
 
 export function IconPicker({ value, onChange }: IconPickerProps) {
   return (
-    <div className="grid grid-cols-8 gap-2 sm:grid-cols-10">
+    <div role="group" aria-label="Icon" className="grid grid-cols-8 gap-2 sm:grid-cols-10">
       {iconOptions.map(({ value: name, icon: Icon }) => (
         <button
           key={name}

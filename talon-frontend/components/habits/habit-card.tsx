@@ -102,7 +102,7 @@ export function HabitCard({ habit, status, streak = 0, archived = false }: Habit
               variant="ghost"
               size="icon"
               className="-mr-2 -mt-1 h-8 w-8 shrink-0 text-muted-foreground"
-              aria-label="Habit options"
+              aria-label={`Options for ${habit.name}`}
             >
               <MoreHorizontal className="h-4 w-4" />
             </Button>
@@ -135,7 +135,7 @@ export function HabitCard({ habit, status, streak = 0, archived = false }: Habit
               grip streak
             </span>
           </div>
-          <GripSlipButtons habitId={habit.id} status={status} />
+          <GripSlipButtons habitId={habit.id} habitName={habit.name} status={status} />
         </div>
       )}
     </div>

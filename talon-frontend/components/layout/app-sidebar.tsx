@@ -27,25 +27,24 @@ function SidebarNav() {
   const tab = useSearchParams().get("tab");
 
   return (
-    <SidebarMenu>
-      {NAV_ITEMS.map((item) => {
-        const Icon = item.icon;
-        return (
-          <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton
-              asChild
-              isActive={isNavActive(item.href, pathname, tab)}
-              tooltip={item.title}
-            >
-              <Link href={item.href}>
-                <Icon />
-                <span>{item.title}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        );
-      })}
-    </SidebarMenu>
+    <nav aria-label="Main">
+      <SidebarMenu>
+        {NAV_ITEMS.map((item) => {
+          const Icon = item.icon;
+          const active = isNavActive(item.href, pathname, tab);
+          return (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton asChild isActive={active} tooltip={item.title}>
+                <Link href={item.href} aria-current={active ? "page" : undefined}>
+                  <Icon />
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          );
+        })}
+      </SidebarMenu>
+    </nav>
   );
 }
 

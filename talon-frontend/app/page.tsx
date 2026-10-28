@@ -18,11 +18,13 @@ export default function LandingPage() {
     <div className="min-h-dvh bg-background text-foreground">
       <div className="h-px w-full bg-primary/40" />
       <LandingHeader />
-      <Hero />
-      <Ritual />
-      <Mechanics />
-      <Begin />
-      <Faq />
+      <main>
+        <Hero />
+        <Ritual />
+        <Mechanics />
+        <Begin />
+        <Faq />
+      </main>
       <LandingFooter />
     </div>
   );

@@ -23,6 +23,23 @@ export function WeekdaySection({ days }: { days: DayStat[] }) {
       <div className="mt-6">
         <WeekdayChartLazy data={data} />
       </div>
+      <table className="sr-only">
+        <caption>Completion rate by weekday, last 30 days</caption>
+        <thead>
+          <tr>
+            <th scope="col">Day</th>
+            <th scope="col">Completion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((entry) => (
+            <tr key={entry.day}>
+              <th scope="row">{entry.day}</th>
+              <td>{entry.due ? `${entry.rate}%` : "Nothing due"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </section>
   );
 }

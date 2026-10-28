@@ -13,7 +13,7 @@ type AuthShellProps = {
 export function AuthShell({ title, subtitle, children, footer }: AuthShellProps) {
   return (
     <div className="grid min-h-dvh bg-background lg:grid-cols-2">
-      <div className="flex flex-col justify-center px-6 py-12">
+      <main className="flex flex-col justify-center px-6 py-12">
         <div className="mx-auto w-full max-w-sm">
           <Link href="/" className="inline-flex">
             <TalonLogo className="h-10 w-auto" />
@@ -26,7 +26,7 @@ export function AuthShell({ title, subtitle, children, footer }: AuthShellProps)
           <div className="mt-8">{children}</div>
           {footer && <div className="mt-6 text-sm text-muted-foreground">{footer}</div>}
         </div>
-      </div>
+      </main>
 
       <aside className="relative hidden overflow-hidden border-l border-border bg-card bg-scan p-12 lg:flex lg:flex-col lg:justify-between">
         <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />

@@ -7,7 +7,7 @@ type ColorPickerProps = { value: HabitColorName; onChange: (color: HabitColorNam
 
 export function ColorPicker({ value, onChange }: ColorPickerProps) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div role="group" aria-label="Color" className="flex flex-wrap gap-2">
       {HABIT_COLOR_NAMES.map((name) => (
         <button
           key={name}

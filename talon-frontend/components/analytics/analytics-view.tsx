@@ -2,6 +2,8 @@
 
 import { Calendar, Flame, TrendingUp } from "lucide-react";
 import { useMemo } from "react";
+import type { UseQueryResult } from "@tanstack/react-query";
+import type { AnalyticsStreaks } from "@/lib/api/types";
 import { AnalyticsSkeleton } from "@/components/analytics/analytics-skeleton";
 import { Heatmap } from "@/components/analytics/heatmap";
 import { StreakLeaderboard } from "@/components/analytics/streak-leaderboard";
@@ -18,6 +20,8 @@ const formatRate = (rate: number | null) => (rate === null ? "–" : `${rate}%`)
 
 export function AnalyticsView() {
   const dashboard = useDashboard();
+  // Started here so it runs in parallel with the dashboard instead of after it.
+  const streaks = useAnalyticsStreaks();
 
   if (dashboard.isPending) return <AnalyticsSkeleton />;
 
@@ -32,12 +36,13 @@ export function AnalyticsView() {
     );
   }
 
-  return <AnalyticsContent today={dashboard.data.date} />;
+  return <AnalyticsContent today={dashboard.data.date} streaks={streaks} />;
 }
 
-function AnalyticsContent({ today }: { today: string }) {
+type AnalyticsContentProps = { today: string; streaks: UseQueryResult<AnalyticsStreaks> };
+
+function AnalyticsContent({ today, streaks }: AnalyticsContentProps) {
   const heatmap = useHeatmap(getRange(today));
-  const streaks = useAnalyticsStreaks();
 
   const days = useMemo(
     () => (heatmap.data ? buildDays(today, heatmap.data) : null),

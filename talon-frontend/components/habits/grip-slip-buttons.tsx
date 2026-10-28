@@ -9,10 +9,11 @@ import type { DashboardHabit } from "@/lib/api/types";
 
 type GripSlipButtonsProps = {
   habitId: string;
+  habitName: string;
   status: DashboardHabit["status"];
 };
 
-export function GripSlipButtons({ habitId, status }: GripSlipButtonsProps) {
+export function GripSlipButtons({ habitId, habitName, status }: GripSlipButtonsProps) {
   const log = useLogCompletion();
 
   if (status === "completed") {
@@ -40,12 +41,13 @@ export function GripSlipButtons({ habitId, status }: GripSlipButtonsProps) {
         variant="ghost"
         size="sm"
         className="text-muted-foreground"
+        aria-label={`Slip ${habitName}`}
         disabled={log.isPending}
         onClick={() => submit("skipped")}
       >
         Slip
       </Button>
-      <Button size="sm" disabled={log.isPending} onClick={() => submit("completed")}>
+      <Button size="sm" aria-label={`Grip ${habitName}`} disabled={log.isPending} onClick={() => submit("completed")}>
         <TalonMark className="mr-1.5 h-3.5 w-3.5" /> Grip
       </Button>
     </div>

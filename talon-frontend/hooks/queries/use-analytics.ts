@@ -9,6 +9,7 @@ export function useHeatmap(range: DateRange) {
   return useQuery({
     queryKey: queryKeys.analytics.heatmap(range),
     queryFn: () => analyticsApi.heatmap(range),
+    staleTime: 60_000,
   });
 }
 
@@ -16,5 +17,6 @@ export function useAnalyticsStreaks() {
   return useQuery({
     queryKey: queryKeys.analytics.streaks,
     queryFn: analyticsApi.streaks,
+    staleTime: 60_000,
   });
 }

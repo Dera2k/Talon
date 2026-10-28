@@ -108,6 +108,7 @@ export class AnalyticsService {
     const items = habits.map((habit) => ({
       habitId: habit.id,
       name: habit.name,
+      color: habit.color,
       currentStreak: streakByHabit.get(habit.id)?.currentStreak ?? 0,
       longestStreak: streakByHabit.get(habit.id)?.longestStreak ?? 0,
     }));

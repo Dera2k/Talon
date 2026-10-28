@@ -707,6 +707,8 @@ export interface components {
         HabitStreakStatsDto: {
             habitId: string;
             name: string;
+            /** @enum {string} */
+            color: "red" | "blue" | "green" | "yellow" | "purple" | "pink" | "orange" | "indigo" | "teal" | "gray";
             currentStreak: number;
             longestStreak: number;
         };

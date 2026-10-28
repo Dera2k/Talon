@@ -1,3 +1,5 @@
+import { HabitColor } from '@common/enums/habit-color.enum';
+
 export class DailyStatsDto {
   date!: string;
   due!: number;
@@ -17,6 +19,7 @@ export class PeriodStatsDto {
 export class HabitStreakStatsDto {
   habitId!: string;
   name!: string;
+  color!: HabitColor;
   currentStreak!: number;
   longestStreak!: number;
 }

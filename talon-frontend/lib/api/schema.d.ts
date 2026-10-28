@@ -573,6 +573,7 @@ export interface components {
             frequency: "daily" | "weekly";
             icon?: string;
             category?: string | null;
+            reminderTime?: string | null;
             weekdays?: number[];
         };
         HabitResponseDto: {

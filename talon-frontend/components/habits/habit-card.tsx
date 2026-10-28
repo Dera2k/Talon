@@ -1,6 +1,6 @@
 "use client";
 
-import { Archive, MoreHorizontal, Pencil } from "lucide-react";
+import { Archive, ArchiveRestore, MoreHorizontal, Pencil } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { TalonMark } from "@/components/brand/talon-mark";
@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useArchiveHabit } from "@/hooks/queries/use-habits";
+import { useArchiveHabit, useRestoreHabit } from "@/hooks/queries/use-habits";
 import { toastApiError } from "@/lib/api/toast-error";
 import type { DashboardHabit, Habit } from "@/lib/api/types";
 import { formatSchedule } from "@/lib/format";
@@ -29,13 +29,15 @@ type HabitCardProps = {
   habit: CardHabit;
   status?: DashboardHabit["status"];
   streak?: number;
+  archived?: boolean;
 };
 
 const COMPLETED_STYLES =
   "border-primary/50 shadow-[0_0_0_1px_color-mix(in_oklab,var(--primary)_20%,transparent),0_20px_60px_-30px_var(--primary)]";
 
-export function HabitCard({ habit, status, streak = 0 }: HabitCardProps) {
+export function HabitCard({ habit, status, streak = 0, archived = false }: HabitCardProps) {
   const archive = useArchiveHabit();
+  const restore = useRestoreHabit();
   const Icon = getIcon(habit.icon);
   const color = getHabitColor(habit.color);
   const completed = status === "completed";
@@ -47,6 +49,13 @@ export function HabitCard({ habit, status, streak = 0 }: HabitCardProps) {
   function handleArchive() {
     archive.mutate(habit.id, {
       onSuccess: () => toast.success("Habit archived"),
+      onError: toastApiError,
+    });
+  }
+
+  function handleRestore() {
+    restore.mutate(habit.id, {
+      onSuccess: () => toast.success("Habit restored"),
       onError: toastApiError,
     });
   }
@@ -104,9 +113,15 @@ export function HabitCard({ habit, status, streak = 0 }: HabitCardProps) {
                 <Pencil className="mr-2 h-4 w-4" /> Edit
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem onSelect={handleArchive} disabled={archive.isPending}>
-              <Archive className="mr-2 h-4 w-4" /> Archive
-            </DropdownMenuItem>
+            {archived ? (
+              <DropdownMenuItem onSelect={handleRestore} disabled={restore.isPending}>
+                <ArchiveRestore className="mr-2 h-4 w-4" /> Restore
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem onSelect={handleArchive} disabled={archive.isPending}>
+                <Archive className="mr-2 h-4 w-4" /> Archive
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

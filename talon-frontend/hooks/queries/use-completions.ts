@@ -66,3 +66,9 @@ export function useUndoCompletion() {
     onSuccess: () => invalidateCompletionData(queryClient),
   });
 }
+
+const HISTORY_LIMIT = 30;
+
+export function useHabitHistory(habitId: string) {
+  return useCompletionHistory({ habitId, limit: HISTORY_LIMIT });
+}

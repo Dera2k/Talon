@@ -13,4 +13,5 @@ export const habitsApi = {
   create: (input: CreateHabitInput) => api.post<Habit>("/habits", input),
   update: (id: string, input: UpdateHabitInput) => api.patch<Habit>(`/habits/${id}`, input),
   archive: (id: string) => api.delete<void>(`/habits/${id}`),
+  restore: (id: string) => api.post<Habit>(`/habits/${id}/restore`),
 };

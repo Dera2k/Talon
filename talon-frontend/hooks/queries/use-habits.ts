@@ -44,3 +44,11 @@ export function useArchiveHabit() {
     onSuccess: () => invalidateHabitData(queryClient),
   });
 }
+
+export function useRestoreHabit() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: habitsApi.restore,
+    onSuccess: () => invalidateHabitData(queryClient),
+  });
+}

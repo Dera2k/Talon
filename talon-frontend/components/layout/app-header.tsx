@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { NotificationsDrawer } from "@/components/notifications/notifications-drawer";
 import { getPageTitle } from "@/lib/nav";
 
 export function AppHeader() {
@@ -18,6 +19,7 @@ export function AppHeader() {
         {getPageTitle(pathname)}
       </h1>
       <div className="ml-auto flex items-center gap-2">
+        <NotificationsDrawer />
         <Button size="sm" asChild>
           <Link href="/app/habits/new">
             <Plus className="mr-1 h-4 w-4" /> New habit

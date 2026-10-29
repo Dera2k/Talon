@@ -68,7 +68,7 @@ export function HabitForm({ habit }: { habit?: Habit }) {
     const payload: CreateHabitInput = {
       name: name.trim(),
       description: description.trim() || null,
-      category: category.trim() || null,
+      category: category.trim().toLowerCase() || null,
       reminderTime,
       frequency,
       weekdays: frequency === "daily" ? ALL_WEEKDAYS : weekdays,

@@ -52,7 +52,7 @@ export class CreateHabitDto {
   @ApiPropertyOptional({ type: String, maxLength: 50 })
   @IsOptional()
   @Transform(({ value }: { value: unknown }) =>
-    typeof value === 'string' ? value.trim() || null : value,
+    typeof value === 'string' ? value.trim().toLowerCase() || null : value,
   )
   @IsString()
   @MaxLength(50)

@@ -92,6 +92,15 @@ export function LoginForm() {
       <Button type="submit" className="w-full" disabled={login.isPending || login.isSuccess}>
         {login.isPending ? "Signing in…" : "Sign in"}
       </Button>
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        disabled={login.isPending || login.isSuccess}
+        onClick={() => login.mutate({ email: "test@test.com", password: "12345test12" })}
+      >
+        Try demo account
+      </Button>
     </form>
   );
 }

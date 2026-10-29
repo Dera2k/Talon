@@ -16,7 +16,6 @@ export const authApi = {
   login: (input: LoginInput) => api.post<LoginResult>("/auth/login", input, { skipAuth: true }),
   refresh: () => api.post<RefreshResult>("/auth/refresh", undefined, { skipAuth: true }),
   logout: () => api.post<void>("/auth/logout", undefined, { skipAuth: true }),
-  logoutAll: () => api.post<void>("/auth/logout-all"),
   forgotPassword: (input: ForgotPasswordInput) =>
     api.post<void>("/auth/forgot-password", input, { skipAuth: true }),
   resetPassword: (input: ResetPasswordInput) =>

@@ -19,8 +19,8 @@ describe("buildDays", () => {
     const days = buildDays(TODAY, heatmap([]));
 
     expect(days).toHaveLength(HEATMAP_DAYS);
-    expect(days[0].date).toBe("2026-07-31");
-    expect(days[HEATMAP_DAYS - 1].date).toBe(TODAY);
+    expect(days.at(0)?.date).toBe("2026-07-31");
+    expect(days.at(-1)?.date).toBe(TODAY);
   });
 
   it("fills days the server omitted with zeros and keeps the ones it sent", () => {

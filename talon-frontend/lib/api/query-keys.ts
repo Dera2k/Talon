@@ -20,7 +20,6 @@ export const queryKeys = {
   analytics: {
     all: ["analytics"] as const,
     heatmap: (query: Query) => ["analytics", "heatmap", query] as const,
-    stats: (query: Query) => ["analytics", "stats", query] as const,
     streaks: ["analytics", "streaks"] as const,
   },
   notifications: {

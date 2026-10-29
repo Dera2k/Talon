@@ -40,6 +40,7 @@ export function getPageTitle(pathname: string): string {
 // Habits and Roost share a path, so the ?tab= value decides which one is active.
 export function isNavActive(href: string, pathname: string, tab: string | null): boolean {
   const [path, query] = href.split("?");
+  if (!path) return false;
   if (path === "/app") return pathname === "/app";
   if (path === HABITS_PATH) {
     const onArchivedList = pathname === HABITS_PATH && tab === "archived";

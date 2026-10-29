@@ -1,0 +1,6 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["proxy.ts"],
+  "ignore": ["lib/api/schema.d.ts", "components/ui/**"],
+  "ignoreDependencies": ["tw-animate-css", "tailwindcss"]
+}

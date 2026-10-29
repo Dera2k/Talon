@@ -178,5 +178,3 @@ test("empty states", async ({ page }) => {
     await shot(page, width, "analytics-empty");
   }
 });
-EOF
-echo written

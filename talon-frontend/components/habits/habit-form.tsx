@@ -149,13 +149,35 @@ export function HabitForm({ habit }: { habit?: Habit }) {
           </div>
           <div className="space-y-2">
             <Label htmlFor="reminderTime">Reminder time</Label>
-            <Input
-              id="reminderTime"
-              type="time"
-              value={reminderTime}
-              onChange={(e) => setReminderTime(e.target.value)}
-              required
-            />
+            <div className="flex gap-2">
+              <select
+                className="h-9 flex-1 rounded-md border border-input bg-transparent px-3 text-sm"
+                value={reminderTime.split(":")[0] ?? "08"}
+                onChange={(e) =>
+                  setReminderTime(`${e.target.value}:${reminderTime.split(":")[1] ?? "00"}`)
+                }
+              >
+                {Array.from({ length: 24 }, (_, i) => (
+                  <option key={i} value={String(i).padStart(2, "0")}>
+                    {String(i).padStart(2, "0")}
+                  </option>
+                ))}
+              </select>
+              <span className="self-center text-muted-foreground">:</span>
+              <select
+                className="h-9 flex-1 rounded-md border border-input bg-transparent px-3 text-sm"
+                value={reminderTime.split(":")[1] ?? "00"}
+                onChange={(e) =>
+                  setReminderTime(`${reminderTime.split(":")[0] ?? "08"}:${e.target.value}`)
+                }
+              >
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i} value={String(i * 5).padStart(2, "0")}>
+                    {String(i * 5).padStart(2, "0")}
+                  </option>
+                ))}
+              </select>
+            </div>
             <FieldError message={errors?.fields.reminderTime} />
           </div>
         </div>

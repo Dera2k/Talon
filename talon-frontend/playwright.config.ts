@@ -4,7 +4,6 @@ const PORT = 3001;
 const BASE_URL = `http://localhost:${PORT}`;
 
 export default defineConfig({
-  testDir: "./tests/e2e",
   fullyParallel: false,
   workers: 1,
   retries: 0,
@@ -15,7 +14,15 @@ export default defineConfig({
     locale: "en-US",
     trace: "retain-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    { name: "chromium", testDir: "./tests/e2e", use: { ...devices["Desktop Chrome"] } },
+    {
+      name: "visual",
+      testDir: "./tests/visual",
+      timeout: 300_000,
+      use: { ...devices["Desktop Chrome"] },
+    },
+  ],
   webServer: {
     command: process.env.CI ? "pnpm build && pnpm start" : "pnpm dev",
     url: BASE_URL,

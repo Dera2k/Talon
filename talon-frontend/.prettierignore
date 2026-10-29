@@ -5,3 +5,5 @@ lib/api/schema.d.ts
 
 /test-results/
 /playwright-report/
+
+/tests/visual/output/

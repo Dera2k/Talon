@@ -58,21 +58,17 @@ export class CreateHabitDto {
   @MaxLength(50)
   category?: string | null;
 
-  @ApiPropertyOptional({ type: String, nullable: true, pattern: '^([01]\\d|2[0-3]):[0-5]\\d
-  @IsOptional()
-  @IsArray()
-  @ArrayMaxSize(7)
-  @ArrayUnique()
-  @IsInt({ each: true })
-  @Min(0, { each: true })
-  @Max(6, { each: true })
-  weekdays?: number[];
-}
- })
+  @ApiPropertyOptional({
+    type: String,
+    nullable: true,
+    pattern: '^([01]\\d|2[0-3]):[0-5]\\d$',
+  })
   @IsOptional()
   @IsString()
   @Matches(/^([01]\d|2[0-3]):[0-5]\d$/, { message: 'reminderTime must be HH:MM' })
   reminderTime?: string | null;
+
+  @ApiPropertyOptional({ type: [Number] })
   @IsOptional()
   @IsArray()
   @ArrayMaxSize(7)

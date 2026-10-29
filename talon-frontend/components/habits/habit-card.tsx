@@ -35,7 +35,7 @@ type HabitCardProps = {
 const COMPLETED_STYLES =
   "border-primary/50 shadow-[0_0_0_1px_color-mix(in_oklab,var(--primary)_20%,transparent),0_20px_60px_-30px_var(--primary)]";
 
-export function HabitCard({ habit, status, streak = 0, archived = false }: HabitCardProps) {
+export function HabitCard({ habit, status = null, streak = 0, archived = false }: HabitCardProps) {
   const archive = useArchiveHabit();
   const restore = useRestoreHabit();
   const Icon = getIcon(habit.icon);
@@ -126,8 +126,7 @@ export function HabitCard({ habit, status, streak = 0, archived = false }: Habit
         </DropdownMenu>
       </div>
 
-      {status && (
-        <div className="flex items-center justify-between border-t border-border/60 pt-4">
+      <div className="flex items-center justify-between border-t border-border/60 pt-4">
           <div className="flex items-center gap-2">
             <TalonMark className="h-4 w-4 text-primary" />
             <span className="num font-display text-lg font-semibold">{streak}</span>
@@ -137,7 +136,6 @@ export function HabitCard({ habit, status, streak = 0, archived = false }: Habit
           </div>
           <GripSlipButtons habitId={habit.id} habitName={habit.name} status={status} />
         </div>
-      )}
     </div>
   );
 }

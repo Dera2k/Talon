@@ -16,22 +16,6 @@ type GripSlipButtonsProps = {
 export function GripSlipButtons({ habitId, habitName, status }: GripSlipButtonsProps) {
   const log = useLogCompletion();
 
-  if (status === "completed") {
-    return (
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary">
-        <Check className="h-3.5 w-3.5" /> Gripped
-      </span>
-    );
-  }
-
-  if (status === "skipped") {
-    return (
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs text-muted-foreground">
-        <SkipForward className="h-3.5 w-3.5" /> Slipped
-      </span>
-    );
-  }
-
   const submit = (next: "completed" | "skipped") =>
     log.mutate({ habitId, status: next }, { onError: toastApiError });
 
@@ -42,14 +26,24 @@ export function GripSlipButtons({ habitId, habitName, status }: GripSlipButtonsP
         size="sm"
         className="text-muted-foreground"
         aria-label={`Slip ${habitName}`}
-        disabled={log.isPending}
+        disabled={log.isPending || status === "skipped"}
         onClick={() => submit("skipped")}
       >
-        Slip
+        <SkipForward className="mr-1.5 h-3.5 w-3.5" /> Slip
       </Button>
-      <Button size="sm" aria-label={`Grip ${habitName}`} disabled={log.isPending} onClick={() => submit("completed")}>
+      <Button
+        size="sm"
+        aria-label={`Grip ${habitName}`}
+        disabled={log.isPending || status === "completed"}
+        onClick={() => submit("completed")}
+      >
         <TalonMark className="mr-1.5 h-3.5 w-3.5" /> Grip
       </Button>
+      {status === "completed" && (
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary">
+          <Check className="h-3.5 w-3.5" /> Gripped
+        </span>
+      )}
     </div>
   );
 }

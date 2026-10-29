@@ -89,17 +89,18 @@ export function LoginForm() {
         <FieldError message={errors?.fields.password} />
       </div>
       <FormAlert message={errors?.general} />
-      <Button type="submit" className="w-full" disabled={login.isPending || login.isSuccess}>
-        {login.isPending ? "Signing in…" : "Sign in"}
-      </Button>
       <Button
         type="button"
-        variant="outline"
-        className="w-full"
+        variant="ghost"
+        size="sm"
+        className="w-full text-muted-foreground hover:text-foreground"
         disabled={login.isPending || login.isSuccess}
-        onClick={() => login.mutate({ email: "test@test.com", password: "12345test12" })}
+        onClick={() => login.mutate({ email: "test@test.com", password: "12345test" })}
       >
-        Try demo account
+        ▸ Demo Talon
+      </Button>
+      <Button type="submit" className="w-full" disabled={login.isPending || login.isSuccess}>
+        {login.isPending ? "Signing in…" : "Sign in"}
       </Button>
     </form>
   );

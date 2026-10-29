@@ -32,7 +32,7 @@ export function PasswordStrength({ password }: { password: string }) {
         ))}
       </div>
       <p className="text-xs text-muted-foreground">
-        {password ? LABELS[score] : "12+ chars, upper/lower/number/symbol"}
+        {password ? LABELS[score] : ""}
       </p>
     </>
   );

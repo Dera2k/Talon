@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Talon — habit tracking that respects your streaks",
   description: "Talon is a quiet habit tracker. Grip your day, protect your streak.",
-  icons: { icon: "/favicon.png" },
+  icons: { icon: "/brand/icons/favicon.ico" },
   openGraph: {
     title: "Talon — habit tracking that respects your streaks",
     description: "Track daily and weekly habits. Clear analytics. Made for consistency.",

@@ -1,22 +1,17 @@
 import Link from "next/link";
-import { TalonMark } from "@/components/brand/talon-mark";
 import { Button } from "@/components/ui/button";
-
-const PREVIEW_STATS = [
-  { k: "Grip streak", v: "27", sub: "Morning workout" },
-  { k: "Today", v: "5 / 8", sub: "gripped" },
-  { k: "This week", v: "82%", sub: "hold rate" },
-];
+import { TalonMark } from "@/components/brand/talon-mark";
+import { PreviewStats } from "@/components/landing/preview-stats";
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-noise">
       <div className="mx-auto max-w-6xl px-4 pt-24 pb-28 md:pt-32 md:pb-36">
-        <p className="mb-8 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
+        <p className="mb-8 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground animate-in fade-in slide-in-from-bottom-2 duration-700">
           <span className="h-px w-8 bg-primary" />
           Habit tracker · v1
         </p>
-        <h1 className="font-display text-[13vw] font-semibold leading-[0.88] tracking-[-0.04em] md:text-[112px]">
+        <h1 className="font-display text-[13vw] font-semibold leading-[0.88] tracking-[-0.04em] md:text-[112px] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
           Grip the day.
           <br />
           <span className="text-primary">Hold</span> the line.
@@ -39,20 +34,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="mt-20 grid gap-px overflow-hidden rounded-lg border bg-border/60 md:grid-cols-3">
-          {PREVIEW_STATS.map((s) => (
-            <div key={s.k} className="flex flex-col justify-between gap-8 bg-card p-6">
-              <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                <span>{s.k}</span>
-                <TalonMark className="h-3.5 w-3.5 text-primary" />
-              </div>
-              <div>
-                <p className="num font-display text-5xl font-semibold tracking-tight">{s.v}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{s.sub}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <PreviewStats />
       </div>
     </section>
   );

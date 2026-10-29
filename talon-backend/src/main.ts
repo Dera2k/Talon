@@ -18,7 +18,7 @@ async function bootstrap(): Promise<void> {
   });
 
   app.useLogger(app.get(Logger));
-  app.set('trust proxy', 1);
+  app.set('trust proxy', Number(process.env.TRUST_PROXY_HOPS ?? 1));
   app.use(helmet());
   app.use(cookieParser());
   app.enableCors({
@@ -26,14 +26,16 @@ async function bootstrap(): Promise<void> {
     credentials: true,
   });
 
-  const config = new DocumentBuilder()
-    .setTitle('Talon API')
-    .setDescription('Habit tracking platform REST API')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  if (process.env.SWAGGER_ENABLED === 'true') {
+    const config = new DocumentBuilder()
+      .setTitle('Talon API')
+      .setDescription('Habit tracking platform REST API')
+      .setVersion('1.0')
+      .addBearerAuth()
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/docs', app, document);
+  }
 
   await app.listen(process.env.PORT ?? 3000);
 }

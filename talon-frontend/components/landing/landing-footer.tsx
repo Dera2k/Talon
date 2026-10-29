@@ -9,10 +9,10 @@ export function LandingFooter() {
           <span className="font-mono uppercase tracking-[0.22em]">© 2026 Talon</span>
         </div>
         <div className="flex gap-8 font-mono uppercase tracking-[0.22em]">
-          <a href="#" className="hover:text-foreground">
+          <a href="/privacy" className="hover:text-foreground">
             Privacy
           </a>
-          <a href="#" className="hover:text-foreground">
+          <a href="/terms" className="hover:text-foreground">
             Terms
           </a>
           <a href="#" className="hover:text-foreground">

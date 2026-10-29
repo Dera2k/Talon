@@ -15,6 +15,8 @@ export const AppDataSource = new DataSource({
   database: process.env.DATABASE_NAME ?? 'talon',
   namingStrategy: new SnakeNamingStrategy(),
   synchronize: false,
+  ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : false,
+  extra: { max: 10 },
   logging: environment === 'development',
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/migrations/*{.ts,.js}'],

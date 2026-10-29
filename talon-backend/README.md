@@ -1,98 +1,118 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Talon Web
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Next.js frontend for Talon, a quiet habit tracker. The NestJS API is the source of truth for every rule; this app renders it.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Overview
 
-## Description
+Talon helps users build daily and weekly habits. Users create habits with schedules, colors, icons, and reminders; mark them complete or skipped each day; track streaks; and review progress through a dashboard and analytics. The frontend is a Next.js App Router application that talks to the API through a same-origin `/api` proxy.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
-## Project setup
+- Authentication: register, login, logout, password reset, timezone selection.
+- Habits: create, edit, archive, restore; daily or weekly schedules; 10 colors; icon picker.
+- Completions: Grip (complete) and Slip (skip) with optimistic updates and rollback.
+- Dashboard (Perch): today's habits, stat row, skipped list, reminders drawer.
+- Analytics: 90-day heatmap, stat cards, leaderboard.
+- Settings: profile, password change, timezone, delete account.
+- Responsive: mobile sheet sidebar, collapsed rail, full layouts at 768/1024/1440.
+- Dark theme only (Obsidian & Acid palette, primary `#c8ff2e`).
 
-```bash
-$ pnpm install
-```
+## Tech stack
 
-## Compile and run the project
+- Next.js 16 (App Router), React 19, TypeScript 5.
+- Tailwind CSS v4, shadcn/ui (Radix), tw-animate-css.
+- TanStack Query for server state; Recharts for charts; date-fns for dates.
+- Vitest (unit), Playwright (E2E + visual).
+- pnpm 10, Node 22.
 
-```bash
-# development
-$ pnpm run start
+## Requirements
 
-# watch mode
-$ pnpm run start:dev
+- Node.js 22 (see `.nvmrc`).
+- pnpm (see `packageManager` field).
+- Running Talon API (see backend README).
 
-# production mode
-$ pnpm run start:prod
-```
-
-## Run tests
+## Getting started
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+git clone <repo-url>
+cd talon-frontend
+pnpm install
+cp .env.example .env.local
+# set API_URL to your API origin
+pnpm api:types
+pnpm dev
 ```
 
-## Deployment
+Open http://localhost:3001.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## Environment configuration
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+| Variable | Required | Description |
+|---|---|---|
+| `API_URL` | yes | Origin of the NestJS API, no trailing slash. Read at build time (rewrite baked into build) and by `pnpm api:types`. |
 
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+Public vs server: `API_URL` is server-only (used in next.config rewrite). No `NEXT_PUBLIC_*` variables are used; the browser calls same-origin `/api/*`.
+
+## How the frontend works
+
+- Requests: browser calls `/api/*` on the Next origin; `next.config.ts` rewrites to `API_URL`. Keeps refresh cookie first-party, no CORS.
+- API client (`lib/api/client.ts`): unwraps `{success,data}`, throws `ApiError`, retries once after 401.
+- Auth: access token in memory only (`lib/auth/token-store.ts`); refresh token is httpOnly cookie; single-flight refresh with delayed retry. `AuthProvider` + `AuthGate` in `app/app/layout.tsx` ensure refresh before render.
+- `proxy.ts` only checks cookie existence (UX redirect); API is the auth gate.
+- Server components never call the API (`/api` URL is relative).
+- Today is decided by the server (user timezone); use `useDashboard().data.date`. Dates are `YYYY-MM-DD`; format via `lib/format.ts`, never `new Date("YYYY-MM-DD")`.
+- Cache keys in `lib/api/query-keys.ts`; mutations call `invalidateHabitData`/`invalidateCompletionData`.
+
+## Available commands
+
+| Script | Purpose |
+|---|---|
+| `dev` / `build` / `start` | Next.js on port 3001 |
+| `api:types` | Regenerate API types from `$API_URL/api/docs-json` |
+| `typecheck` / `lint` / `format` | Static checks |
+| `knip` | Unused files/exports/deps |
+| `test` / `test:tz` | Unit tests (tz variant catches date bugs) |
+| `test:e2e` | Playwright flows (needs API with relaxed auth throttling) |
+| `test:visual` | Screenshots at 390/768/1024/1440 |
+| `analyze` | Bundle report |
+
+Before merging: `pnpm typecheck && pnpm lint && pnpm knip && pnpm test && pnpm test:tz && pnpm build && pnpm test:e2e`
+
+## Testing and quality checks
+
+- Unit: Vitest (`tests/unit`).
+- E2E: Playwright (`tests/e2e`) against running API.
+- Visual: Playwright (`tests/visual`) writes screenshots to `tests/visual/output/`.
+- Prereqs: API running with relaxed auth throttle for E2E/visual.
+
+## API types and synchronization
+
+Generated types live in `lib/api/schema.d.ts` (from OpenAPI). Never edit manually. Re-run `pnpm api:types` after API changes.
+
+## Production build and deployment
+
+- `API_URL` must be set at build time (rewrites baked into build).
+- Build: `pnpm build`; start: `pnpm start` (port 3001).
+- Security headers via `next.config.ts`. No CSP yet (launch item).
+- Deploy frontend to Vercel; set `API_URL` per environment (production vs preview).
+
+## Project structure
+
+```
+app/            routes: (auth) group, app/ for authenticated shell
+components/     ui (shadcn), brand, shared, layout, feature folders
+hooks/queries/  one file per API resource
+lib/api/        client, errors, endpoints, generated schema, query keys
+lib/auth/       token store, refresh, session, provider
+tests/          unit (Vitest); e2e + visual (Playwright)
+docs/           visual QA checklist
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Known limitations
 
-## Resources
+- No CSP, no error reporting (Sentry) yet.
+- Light/system themes not implemented (Settings says so).
+- Landing footer links (Privacy, Terms, Contact) are placeholders.
+- Habit detail lacks notes/per-row time (intentional).
 
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Keep backend docs in `talon-backend/README.md`.

@@ -54,6 +54,8 @@ const conditionalImports: (Type<unknown> | DynamicModule)[] = isTest
           port: config.getOrThrow<number>('redis.port'),
           password: config.get<string>('redis.password'),
           tls: config.get<boolean>('redis.tls') ? {} : undefined,
+          keepAlive: 10000,
+          retryStrategy: (times: number) => Math.min(times * 50, 2000),
         },
         defaultJobOptions: config.getOrThrow('bull.defaultJobOptions'),
       }),

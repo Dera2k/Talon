@@ -17,14 +17,14 @@ export async function seedNotifications(dataSource: DataSource): Promise<void> {
     return;
   }
 
-  const habits = await habitRepository.find({ where: { user_id: user.id } });
+  const habits = await habitRepository.find({ where: { userId: user.id } });
   if (habits.length === 0) {
     console.warn('No habits found for demo user, skipping notification seed.');
     return;
   }
 
   const existing = await notificationRepository.count({
-    where: { user_id: user.id },
+    where: { userId: user.id },
   });
   if (existing > 0) {
     console.info(
@@ -39,8 +39,8 @@ export async function seedNotifications(dataSource: DataSource): Promise<void> {
 
   await notificationRepository.insert([
     {
-      user_id: user.id,
-      habit_id: exerciseHabit?.id ?? null,
+      userId: user.id,
+      habitId: exerciseHabit?.id ?? null,
       type: 'reminder',
       title: 'Time to exercise!',
       message: "Your daily workout is scheduled for now. Let's get moving!",
@@ -48,8 +48,8 @@ export async function seedNotifications(dataSource: DataSource): Promise<void> {
       data: { habit_name: 'Exercise' },
     },
     {
-      user_id: user.id,
-      habit_id: readHabit?.id ?? null,
+      userId: user.id,
+      habitId: readHabit?.id ?? null,
       type: 'reminder',
       title: 'Reading time',
       message: "Don't forget to read your 20 pages today.",
@@ -57,18 +57,18 @@ export async function seedNotifications(dataSource: DataSource): Promise<void> {
       data: { habit_name: 'Read' },
     },
     {
-      user_id: user.id,
-      habit_id: null,
-      type: 'streak_milestone',
+      userId: user.id,
+      habitId: null,
+      type: 'milestone',
       title: 'Welcome to Talon!',
       message: "You've set up your first habits. Start building streaks today!",
       status: 'unread',
       data: { streak_count: 0 },
     },
     {
-      user_id: user.id,
-      habit_id: null,
-      type: 'tip',
+      userId: user.id,
+      habitId: null,
+      type: 'reminder',
       title: 'Pro tip: Consistency over intensity',
       message:
         'Small daily actions beat occasional big efforts. Keep your streaks alive!',

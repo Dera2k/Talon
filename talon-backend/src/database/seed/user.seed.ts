@@ -16,7 +16,7 @@ export async function seedUsers(dataSource: DataSource): Promise<void> {
 
   await userRepository.insert({
     email: 'demo@talon.app',
-    password_hash: passwordHash,
+    passwordHash: passwordHash,
     first_name: 'Demo',
     last_name: 'User',
     timezone: 'America/Los_Angeles',
@@ -26,4 +26,20 @@ export async function seedUsers(dataSource: DataSource): Promise<void> {
   });
 
   console.info('✓ Demo user created (demo@talon.app / demo1234)');
+
+  const existingTest = await userRepository.findOne({ where: { email: 'test@test.com' } });
+  if (!existingTest) {
+    const testHash = await bcrypt.hash('12345test', 12);
+    await userRepository.insert({
+      email: 'test@test.com',
+      passwordHash: testHash,
+      first_name: 'test',
+      last_name: 'account',
+      timezone: 'UTC',
+      theme: 'system',
+      is_active: true,
+      is_verified: true,
+    });
+    console.info('✓ Test user created (test@test.com / 12345test)');
+  }
 }

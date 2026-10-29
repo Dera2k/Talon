@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { seedUsers } from './user.seed';
 import { seedHabits } from './habit.seed';
+import { seedDemoHabits } from './demo-habits.seed';
 import { seedNotifications } from './notification.seed';
 
 const environment = process.env.NODE_ENV ?? 'development';
@@ -32,6 +33,7 @@ async function bootstrap(): Promise<void> {
 
     await seedUsers(AppDataSource);
     await seedHabits(AppDataSource);
+    await seedDemoHabits(AppDataSource);
     await seedNotifications(AppDataSource);
 
     console.info('✅ Seed completed successfully');

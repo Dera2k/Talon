@@ -7,4 +7,3 @@ export const IsPasswordStrong = () =>
     MinLength(8),
     MaxLength(128),
   );
-EOF

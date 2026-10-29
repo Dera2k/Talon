@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { FieldError, FormAlert } from "@/components/shared/form-feedback";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ export function ResetPasswordForm() {
   const router = useRouter();
   const token = useSearchParams().get("token");
   const [mismatch, setMismatch] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const reset = useMutation({
     mutationFn: authApi.resetPassword,
@@ -53,28 +55,40 @@ export function ResetPasswordForm() {
     <form className="space-y-4" onSubmit={handleSubmit}>
       <div className="space-y-2">
         <Label htmlFor="newPassword">New password</Label>
+        <div className="relative">
         <Input
           id="newPassword"
           name="newPassword"
-          type="password"
+          type={showPassword ? "text" : "password"}
           autoComplete="new-password"
           minLength={8}
           maxLength={128}
           required
+          className="pr-10"
         />
+        <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label={showPassword ? "Hide password" : "Show password"}>
+          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        </button>
+        </div>
         <FieldError message={errors?.fields.newPassword} />
       </div>
       <div className="space-y-2">
         <Label htmlFor="confirmPassword">Confirm password</Label>
+        <div className="relative">
         <Input
           id="confirmPassword"
           name="confirmPassword"
-          type="password"
+          type={showPassword ? "text" : "password"}
           autoComplete="new-password"
           minLength={8}
           maxLength={128}
           required
+          className="pr-10"
         />
+        <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label={showPassword ? "Hide password" : "Show password"}>
+          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        </button>
+        </div>
         <FieldError message={mismatch ? "Passwords don’t match." : undefined} />
       </div>
       <FormAlert message={errors?.general ?? errors?.fields.token} />

@@ -53,6 +53,7 @@ const conditionalImports: (Type<unknown> | DynamicModule)[] = isTest
           host: config.getOrThrow<string>('redis.host'),
           port: config.getOrThrow<number>('redis.port'),
           password: config.get<string>('redis.password'),
+          tls: config.get<boolean>('redis.tls') ? {} : undefined,
         },
         defaultJobOptions: config.getOrThrow('bull.defaultJobOptions'),
       }),
@@ -65,9 +66,11 @@ const conditionalImports: (Type<unknown> | DynamicModule)[] = isTest
         const host = config.getOrThrow<string>('redis.host');
         const port = config.getOrThrow<number>('redis.port');
         const password = config.get<string>('redis.password');
+        const tls = config.get<boolean>('redis.tls');
         const auth = password ? `:${encodeURIComponent(password)}@` : '';
+        const scheme = tls ? 'rediss' : 'redis';
 
-        return { stores: [createKeyv(`redis://${auth}${host}:${port}`)] };
+        return { stores: [createKeyv(`${scheme}://${auth}${host}:${port}`)] };
       },
     }),
 

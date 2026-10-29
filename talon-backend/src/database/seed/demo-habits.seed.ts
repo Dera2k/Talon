@@ -6,9 +6,9 @@ const HABITS = [
   { name: 'Hydrate', description: 'Drink enough water throughout the day.', color: 'teal', icon: 'droplet', frequency: 'daily', target_count: 1, schedule: { type: 'daily', time_of_day: '10:00:00', reminder_minutes_before: 15 } },
   { name: 'Journal', description: 'Write down your thoughts or reflect on the day.', color: 'purple', icon: 'pen', frequency: 'daily', target_count: 1, schedule: { type: 'daily', time_of_day: '20:30:00', reminder_minutes_before: 30 } },
   { name: 'Sleep', description: 'Go to bed early enough to get seven to nine hours of sleep.', color: 'indigo', icon: 'moon', frequency: 'daily', target_count: 1, schedule: { type: 'daily', time_of_day: '22:00:00', reminder_minutes_before: 60 } },
-  { name: 'Plan Week', description: 'Review your priorities and plan the week ahead.', color: 'orange', icon: 'calendar', frequency: 'weekly', target_count: 1, schedule: { type: 'weekly', time_of_day: '18:00:00', reminder_minutes_before: 30, days_of_week: [0] } },
-  { name: 'Meal Prep', description: 'Prepare healthy meals or ingredients for the coming days.', color: 'green', icon: 'apple', frequency: 'weekly', target_count: 1, schedule: { type: 'weekly', time_of_day: '16:00:00', reminder_minutes_before: 60, days_of_week: [0] } },
-  { name: 'Review Goals', description: 'Review your monthly progress and set priorities for the next month.', color: 'pink', icon: 'clipboard', frequency: 'monthly', target_count: 1, schedule: { type: 'monthly', time_of_day: '17:00:00', reminder_minutes_before: 60, day_of_month: 28 } },
+  { name: 'Plan Week', description: 'Review your priorities and plan the week ahead.', color: 'orange', icon: 'calendar', frequency: 'weekly', target_count: 1, schedule: { type: 'weekly', time_of_day: '18:00:00', reminder_minutes_before: 30, daysOfWeek: [0] } },
+  { name: 'Meal Prep', description: 'Prepare healthy meals or ingredients for the coming days.', color: 'green', icon: 'apple', frequency: 'weekly', target_count: 1, schedule: { type: 'weekly', time_of_day: '16:00:00', reminder_minutes_before: 60, daysOfWeek: [0] } },
+  { name: 'Review Goals', description: 'Review your monthly progress and set priorities for the next month.', color: 'pink', icon: 'clipboard', frequency: 'weekly', target_count: 1, schedule: { type: 'weekly', time_of_day: '17:00:00', reminder_minutes_before: 60, daysOfWeek: [0] } },
 ];
 
 export async function seedDemoHabits(dataSource: DataSource): Promise<void> {
@@ -45,8 +45,7 @@ export async function seedDemoHabits(dataSource: DataSource): Promise<void> {
       timezone: 'UTC',
       reminder_enabled: true,
       reminder_minutes_before: h.schedule.reminder_minutes_before,
-      days_of_week: h.schedule.days_of_week ?? [],
-      ...(h.schedule.day_of_month ? { day_of_month: h.schedule.day_of_month } : {}),
+      daysOfWeek: h.schedule.daysOfWeek ?? [],
     });
   }
   console.info(`✓ ${HABITS.length} demo habits created for test@test.com`);

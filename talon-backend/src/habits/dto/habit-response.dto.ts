@@ -84,7 +84,7 @@ export class HabitResponseDto {
       reminderTime: habit.reminderTime,
       archivedAt: habit.archivedAt,
       createdAt: habit.createdAt,
-      weekdays: habit.schedule.daysOfWeek,
+      weekdays: habit.schedule?.daysOfWeek ?? [],
     };
   }
 }

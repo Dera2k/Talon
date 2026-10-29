@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import * as argon2 from 'argon2';
 
 export async function seedUsers(dataSource: DataSource): Promise<void> {
   const userRepository = dataSource.getRepository('users');
@@ -12,7 +12,7 @@ export async function seedUsers(dataSource: DataSource): Promise<void> {
     return;
   }
 
-  const passwordHash = await bcrypt.hash('demo1234', 12);
+  const passwordHash = await argon2.hash('demo1234');
 
   await userRepository.insert({
     email: 'demo@talon.app',
@@ -29,7 +29,7 @@ export async function seedUsers(dataSource: DataSource): Promise<void> {
 
   const existingTest = await userRepository.findOne({ where: { email: 'test@test.com' } });
   if (!existingTest) {
-    const testHash = await bcrypt.hash('12345test', 12);
+    const testHash = await argon2.hash('12345test');
     await userRepository.insert({
       email: 'test@test.com',
       passwordHash: testHash,

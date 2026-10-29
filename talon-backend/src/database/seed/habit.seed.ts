@@ -43,7 +43,7 @@ export async function seedHabits(dataSource: DataSource): Promise<void> {
     timezone: user.timezone,
     reminder_enabled: true,
     reminder_minutes_before: 15,
-    days_of_week: [],
+    daysOfWeek: [],
   });
 
   // Habit 2: Read daily
@@ -65,7 +65,7 @@ export async function seedHabits(dataSource: DataSource): Promise<void> {
     timezone: user.timezone,
     reminder_enabled: true,
     reminder_minutes_before: 30,
-    days_of_week: [],
+    daysOfWeek: [],
   });
 
   // Habit 3: Weekly planning (weekly)
@@ -83,7 +83,7 @@ export async function seedHabits(dataSource: DataSource): Promise<void> {
   await scheduleRepository.save({
     habitId: planningHabit.id,
     type: 'weekly',
-    days_of_week: [0], // Sunday
+    daysOfWeek: [0], // Sunday
     time_of_day: '10:00:00',
     timezone: user.timezone,
     reminder_enabled: true,
@@ -110,7 +110,7 @@ export async function seedHabits(dataSource: DataSource): Promise<void> {
     timezone: user.timezone,
     reminder_enabled: true,
     reminder_minutes_before: 120,
-    days_of_week: [],
+    daysOfWeek: [],
   });
 
   console.info('✓ 4 demo habits created with schedules');

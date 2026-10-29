@@ -37,6 +37,7 @@ export async function seedDemoHabits(dataSource: DataSource): Promise<void> {
       icon: h.icon,
       frequency: h.frequency,
       target_count: h.target_count,
+      reminderTime: h.schedule.time_of_day.slice(0, 5),
     });
     await scheduleRepository.save({
       habitId: habit.id,

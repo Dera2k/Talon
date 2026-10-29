@@ -34,6 +34,7 @@ export async function seedHabits(dataSource: DataSource): Promise<void> {
     icon: 'dumbbell',
     frequency: 'daily',
     target_count: 1,
+    reminderTime: '07:00',
   });
 
   await scheduleRepository.save({
@@ -56,6 +57,7 @@ export async function seedHabits(dataSource: DataSource): Promise<void> {
     icon: 'book',
     frequency: 'daily',
     target_count: 1,
+    reminderTime: '21:00',
   });
 
   await scheduleRepository.save({
@@ -78,6 +80,7 @@ export async function seedHabits(dataSource: DataSource): Promise<void> {
     icon: 'calendar',
     frequency: 'weekly',
     target_count: 1,
+    reminderTime: '10:00',
   });
 
   await scheduleRepository.save({
@@ -98,19 +101,19 @@ export async function seedHabits(dataSource: DataSource): Promise<void> {
     description: 'Review goals and progress',
     color: 'orange',
     icon: 'clipboard',
-    frequency: 'monthly',
+    frequency: 'weekly',
     target_count: 1,
+    reminderTime: '09:00',
   });
 
   await scheduleRepository.save({
     habitId: reviewHabit.id,
-    type: 'monthly',
-    day_of_month: 1,
+    type: 'weekly',
+    daysOfWeek: [1],
     time_of_day: '09:00:00',
     timezone: user.timezone,
     reminder_enabled: true,
     reminder_minutes_before: 120,
-    daysOfWeek: [],
   });
 
   console.info('✓ 4 demo habits created with schedules');

@@ -15,8 +15,8 @@ export class EmailProcessor extends WorkerHost {
   constructor(config: ConfigService) {
     super();
     const apiKey = config.get<string>('mail.resendApiKey');
-    if (!apiKey && process.env.NODE_ENV === 'production') {
-      throw new Error('RESEND_API_KEY is required in production');
+    if (!apiKey) {
+      this.logger.warn('RESEND_API_KEY not set; emails will be logged only');
     }
     this.resend = apiKey ? new Resend(apiKey) : null;
     this.from = config.getOrThrow<string>('mail.from');
